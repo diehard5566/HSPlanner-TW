@@ -1,10 +1,12 @@
 import type * as React from 'react'
+import { useUiText } from '../../localization/uiText'
 
 export function HeroStat({ k, v }: { k: string; v: string }) {
+  const ui = useUiText()
   return (
     <div className="flex flex-col gap-0.5">
       <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-faint">
-        {k}
+        {ui(k)}
       </span>
       <span className="font-mono text-[13px] font-semibold tabular-nums text-text">
         {v}
@@ -22,10 +24,11 @@ export function BDLine({
   value: React.ReactNode
   indent?: boolean
 }) {
+  const ui = useUiText()
   return (
     <div className="flex items-baseline justify-between gap-3 py-0.5 tabular-nums">
       <span className={`text-faint ${indent ? 'pl-3.5 text-muted' : ''}`}>
-        {label}
+        {ui(label)}
       </span>
       <span className="text-right font-mono font-medium">{value}</span>
     </div>
@@ -41,13 +44,14 @@ export function BDSection({
   children: React.ReactNode
   titleClass?: string
 }) {
+  const ui = useUiText()
   return (
     <div className="mt-2 first:mt-0">
       <div className="mb-1 flex items-center gap-2">
         <span
           className={`font-mono text-[9px] font-semibold uppercase tracking-[0.18em] ${titleClass}`}
         >
-          {title}
+          {typeof title === 'string' ? ui(title) : title}
         </span>
         <span className="h-px flex-1 bg-border" />
       </div>
@@ -63,10 +67,11 @@ export function SubSectionLabel({
   children: React.ReactNode
   first?: boolean
 }) {
+  const ui = useUiText()
   return (
     <div className={`mb-1 flex items-center gap-2 ${first ? 'mt-0' : 'mt-3'}`}>
       <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-accent-deep">
-        {children}
+        {typeof children === 'string' ? ui(children) : children}
       </span>
       <span className="h-px flex-1 bg-border" />
     </div>
@@ -74,10 +79,11 @@ export function SubSectionLabel({
 }
 
 export function SectionHeading({ children }: { children: React.ReactNode }) {
+  const ui = useUiText()
   return (
     <div className="flex items-center gap-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
       <span className="h-px w-3.5 bg-accent-deep" />
-      {children}
+      {typeof children === 'string' ? ui(children) : children}
     </div>
   )
 }
@@ -93,6 +99,7 @@ export function Panel({
   children: React.ReactNode
   padded?: boolean
 }) {
+  const ui = useUiText()
   return (
     <div
       className={`relative overflow-hidden rounded-md border border-border ${padded ? 'px-4 pb-3.5 pt-3.5' : 'px-4 pb-3.5 pt-4'}`}
@@ -113,11 +120,11 @@ export function Panel({
             style={{ boxShadow: '0 0 6px rgba(224,184,100,0.5)' }}
           />
           <h3 className="m-0 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-accent-hot/70">
-            {title}
+            {ui(title)}
           </h3>
           {meta && (
             <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.14em] text-faint">
-              {meta}
+              {ui(meta)}
             </span>
           )}
         </div>

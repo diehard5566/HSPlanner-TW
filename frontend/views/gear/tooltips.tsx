@@ -8,6 +8,8 @@ import type { BuildStatDiff } from '../../utils/build/buildPerformance'
 import type { Affix } from '../../types'
 import { affixTierLabel } from './lib/affixGroups'
 import { augmentIconForId, socketableIconForName } from './lib/gearIcons'
+import { useUiText } from '../../localization/uiText'
+import { useGameTranslations } from '../../localization/game'
 
 const PERCENT_STAT_KEYS = new Set(
   gameConfig.stats.filter((s) => s.format === 'percent').map((s) => s.key),
@@ -24,6 +26,8 @@ export function NetChangeBlock({
   dpsDiffs?: BuildStatDiff[]
   activeSkillName?: string | null
 }) {
+  const ui = useUiText()
+  const { display } = useGameTranslations()
   const allKeys = new Set([
     ...Object.keys(previous),
     ...Object.keys(next),
@@ -51,15 +55,15 @@ export function NetChangeBlock({
   return (
     <TooltipSection>
       <div className="mb-2 flex items-center gap-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
-        <span>Net Change</span>
+        <span>{ui('Net Change')}</span>
         <span className="h-px flex-1 bg-border" />
       </div>
       {hasDps && (
         <div className={diffs.length > 0 ? 'mb-1.5' : undefined}>
           <div className="mb-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-muted/70">
-            Active Skill
+            {ui('Active Skill')}
             {activeSkillName ? (
-              <span className="ml-1 text-faint">· {activeSkillName}</span>
+              <span className="ml-1 text-faint">· {display(activeSkillName)}</span>
             ) : null}
           </div>
           <div className="space-y-0.5">
@@ -70,12 +74,12 @@ export function NetChangeBlock({
         </div>
       )}
       {diffs.length === 0 ? (
-        !hasDps && <p className="text-[11px] text-faint italic">No stat changes</p>
+        !hasDps && <p className="text-[11px] text-faint italic">{ui('No stat changes')}</p>
       ) : (
         <div>
           {hasDps && (
             <div className="mb-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-muted/70">
-              Stats
+              {ui('Stats')}
             </div>
           )}
           <div className="space-y-0.5">

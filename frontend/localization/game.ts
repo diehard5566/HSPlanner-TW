@@ -1,6 +1,7 @@
 import { useSettings } from '../store/settings'
 import { GAME_TRANSLATIONS, type GameTranslationNamespace } from './gameTranslations.generated'
 import type { Locale } from './locales'
+import { translateUiText } from './uiText'
 
 type RuntimeNamespace = {
   byKey: Record<string, readonly [string, string]>
@@ -44,6 +45,44 @@ export function translateGameTextAny(locale: Locale, fallback: string): string {
   return fallback
 }
 
+/**
+ * Translate text assembled by the planner at runtime (for example
+ * "+38% Attack Damage" or "Satanic · Hand Axe · 1-Handed").  The generated
+ * game dictionaries intentionally contain the terms, not every possible
+ * numeric combination, so translate the stable pieces while preserving data.
+ */
+export function translateDisplayText(locale: Locale, text: string): string {
+  if (locale === 'en' || !text) return text
+
+  const ui = translateUiText(locale, text)
+  if (ui !== text) return ui
+  const game = translateGameTextAny(locale, text)
+  if (game !== text) return game
+
+  if (text.includes(' · ')) {
+    return text.split(' · ').map((part) => translateDisplayText(locale, part)).join(' · ')
+  }
+
+  const countedItem = text.match(/^(.*?)(\s+×\d+)$/)
+  if (countedItem) {
+    return `${translateDisplayText(locale, countedItem[1]!)}${countedItem[2]}`
+  }
+
+  const markedItem = text.match(/^([✓✗]\s*)(.*?)(\s+\(([^)]+)\))$/)
+  if (markedItem) {
+    return `${markedItem[1]}${translateDisplayText(locale, markedItem[2]!)} (${translateDisplayText(locale, markedItem[4]!)})`
+  }
+
+  // Values and roll ranges are generated separately from their stat names.
+  const statLine = text.match(/^([+−-]?(?:\[[^\]]+\]|\d[\d.,]*(?:\s*[-–]\s*\d[\d.,]*)?)(?:%|x|s)?)(?:\s+to)?\s+(.+)$/i)
+  if (statLine) {
+    const translatedStat = translateGameTextAny(locale, statLine[2]!)
+    if (translatedStat !== statLine[2]) return `${statLine[1]} ${translatedStat}`
+  }
+
+  return text
+}
+
 export function gameSearchTextAny(locale: Locale, fallback: string): string {
   const values = [fallback]
   for (const namespace of DISPLAY_NAMESPACES) {
@@ -59,6 +98,7 @@ export function useGameTranslations() {
     locale,
     game: (namespace: GameTranslationNamespace, options: GameTextOptions) => translateGameText(locale, namespace, options),
     gameAny: (fallback: string) => translateGameTextAny(locale, fallback),
+    display: (text: string) => translateDisplayText(locale, text),
     searchText: (namespace: GameTranslationNamespace, options: GameTextOptions) => gameSearchText(locale, namespace, options),
     searchAny: (fallback: string) => gameSearchTextAny(locale, fallback),
   }

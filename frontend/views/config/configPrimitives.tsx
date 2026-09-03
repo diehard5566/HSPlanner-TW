@@ -1,4 +1,5 @@
 export { Panel } from '../../components/ui/Panel'
+import { useUiText } from '../../localization/uiText'
 
 export function GroupHeading({
   title,
@@ -7,6 +8,7 @@ export function GroupHeading({
   title: string
   subtitle?: string
 }) {
+  const ui = useUiText()
   return (
     <div className="pt-1">
       <div className="flex items-center gap-3">
@@ -16,7 +18,7 @@ export function GroupHeading({
           style={{ boxShadow: '0 0 8px rgba(224,184,100,0.6)' }}
         />
         <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-hot/80">
-          {title}
+          {ui(title)}
         </span>
         <span
           aria-hidden
@@ -29,7 +31,7 @@ export function GroupHeading({
       </div>
       {subtitle && (
         <p className="mt-1.5 pl-4 text-[12px] leading-relaxed text-muted">
-          {subtitle}
+          {ui(subtitle)}
         </p>
       )}
     </div>
@@ -45,14 +47,14 @@ export function CountBadge({
   total?: number
   highlight?: boolean
 }) {
+  const ui = useUiText()
   return (
     <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
       <span className={highlight ? 'text-accent-hot' : 'text-muted'}>
         {value}
       </span>
       {total !== undefined && <span className="text-faint"> / {total}</span>}{' '}
-      {total !== undefined ? 'active' : 'override' + (value === 1 ? '' : 's')}
+      {total !== undefined ? ui('active') : ui(value === 1 ? 'override' : 'overrides')}
     </span>
   )
 }
-

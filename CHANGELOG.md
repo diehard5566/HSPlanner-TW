@@ -1,2 +1,5 @@
-## Feature
-- Bug report button: if you want report any feedback please use this
+## v1.0.9
+
+- 補齊繁體中文 UI、對話框、設定面板及屬性來源明細。
+- 修正動態詞綴與道具細項未翻譯，例如數值詞綴、套裝件數及插槽物品。
+- 道具、技能與屬性名稱繼續使用遊戲官方繁體中文資料。

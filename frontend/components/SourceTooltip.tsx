@@ -12,6 +12,13 @@ import Tooltip from './ui/Tooltip'
 import TreeNodeMiniMap from './TreeNodeMiniMap'
 import { CornerMarks } from './ui/CornerMarks'
 import { findTreeNodeById, findTreeNodeByName } from '../utils/tree/treeNodes'
+import { useUiText } from '../localization/uiText'
+import { useGameTranslations } from '../localization/game'
+
+function UiText({ children }: { children: string }) {
+  const ui = useUiText()
+  return <>{ui(children)}</>
+}
 
 const SOURCE_COLOR: Record<SourceType, string> = {
   class: 'text-text/70',
@@ -141,7 +148,7 @@ function SourceItem({
       <div className="flex items-baseline justify-between gap-2 leading-[1.5] pl-3 -mx-1 px-1 rounded-[2px] hover:bg-accent-hot/8 transition-colors">
         <span className="flex items-baseline gap-1 min-w-0">
           <span className="text-text/40 shrink-0">⤷</span>
-          <span className={`shrink-0 italic ${color}`}>Forged modifier</span>
+          <span className={`shrink-0 italic ${color}`}><UiText>Forged modifier</UiText></span>
           <span className="text-text/60 truncate">
             ({FORGE_KIND_LABEL[s.forge.kind]})
           </span>
@@ -172,7 +179,7 @@ function SourceItem({
         <span
           className={`text-[9px] uppercase tracking-wider shrink-0 ${SOURCE_COLOR[s.sourceType]}`}
         >
-          {SOURCE_LABEL[s.sourceType]}
+          <UiText>{SOURCE_LABEL[s.sourceType]}</UiText>
         </span>
         <span className="text-text/80 truncate">{displayLabel}</span>
       </span>
@@ -223,7 +230,7 @@ function SourceItem({
 function sectionLabel(text: string, trailing?: string) {
   return (
     <div className="flex items-center justify-between px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-accent-hot/80 bg-accent-deep/10 border-b border-border/40">
-      <span>{text}</span>
+      <span><UiText>{text}</UiText></span>
       {trailing && (
         <span className="font-mono normal-case text-text/70 tracking-normal">
           {trailing}
@@ -336,7 +343,7 @@ function CalculationSection({ breakdown }: { breakdown: StatBreakdown }) {
         {sectionLabel('Calculation', fmtBreakdownValue(combined, isPercent))}
         <div className="px-3 py-2 text-[11px]">
           <div className="flex items-baseline justify-between gap-2 text-text/70">
-            <span>{preDiminish !== undefined ? 'Total (pre-diminish)' : 'Total'}</span>
+            <span><UiText>{preDiminish !== undefined ? 'Total (pre-diminish)' : 'Total'}</UiText></span>
             <span className="font-mono tabular-nums text-accent-hot">
               {fmtBreakdownValue(combined, isPercent)}
               {rawSuffix}
@@ -352,14 +359,14 @@ function CalculationSection({ breakdown }: { breakdown: StatBreakdown }) {
         {sectionLabel('Calculation', fmtFlatRange(combined))}
         <div className="space-y-1 px-3 py-2 text-[11px]">
           <div className="flex items-baseline justify-between gap-2 text-text/70">
-            <span>Additive (flat)</span>
+            <span><UiText>Additive (flat)</UiText></span>
             <span className="font-mono tabular-nums text-text/85">
               {fmtFlatRange(additiveSum)}
             </span>
           </div>
           {hasIncreased && (
             <div className="flex items-baseline justify-between gap-2 text-text/70">
-              <span>Increased (+%)</span>
+              <span><UiText>Increased (+%)</UiText></span>
               <span className="font-mono tabular-nums text-text/85">
                 {fmtPctRange(increasedSum)}
               </span>
@@ -367,7 +374,7 @@ function CalculationSection({ breakdown }: { breakdown: StatBreakdown }) {
           )}
           {hasMore && (
             <div className="flex items-baseline justify-between gap-2 text-text/70">
-              <span>More (×)</span>
+              <span><UiText>More (×)</UiText></span>
               <span className="font-mono tabular-nums text-text/85">
                 {fmtMultRange(moreSum)}
               </span>
@@ -377,7 +384,7 @@ function CalculationSection({ breakdown }: { breakdown: StatBreakdown }) {
             flat × (1 + inc/100) × (1 + more/100)
           </div>
           <div className="flex items-baseline justify-between gap-2 border-t border-border/40 pt-1">
-            <span className="font-semibold text-accent-hot/90">Combined</span>
+            <span className="font-semibold text-accent-hot/90"><UiText>Combined</UiText></span>
             <span className="font-mono tabular-nums text-accent-hot">
               {fmtFlatRange(combined)}
               {rawSuffix}
@@ -392,13 +399,13 @@ function CalculationSection({ breakdown }: { breakdown: StatBreakdown }) {
       {sectionLabel('Calculation', fmtPctRange(combined))}
       <div className="space-y-1 px-3 py-2 text-[11px]">
         <div className="flex items-baseline justify-between gap-2 text-text/70">
-          <span>Additive (+)</span>
+          <span><UiText>Additive (+)</UiText></span>
           <span className="font-mono tabular-nums text-text/85">
             {fmtPctRange(additiveSum)}
           </span>
         </div>
         <div className="flex items-baseline justify-between gap-2 text-text/70">
-          <span>Multiplicative (×)</span>
+          <span><UiText>Multiplicative (×)</UiText></span>
           <span className="font-mono tabular-nums text-text/85">
             {fmtMultRange(moreSum)}
           </span>
@@ -407,7 +414,7 @@ function CalculationSection({ breakdown }: { breakdown: StatBreakdown }) {
           (1 + add/100) × (1 + more/100) − 1
         </div>
         <div className="flex items-baseline justify-between gap-2 border-t border-border/40 pt-1">
-          <span className="font-semibold text-accent-hot/90">Combined</span>
+          <span className="font-semibold text-accent-hot/90"><UiText>Combined</UiText></span>
           <span className="font-mono tabular-nums text-accent-hot">
             {fmtPctRange(combined)}
             {rawSuffix}
@@ -447,7 +454,7 @@ function BySourceTypeSection({ breakdown }: { breakdown: StatBreakdown }) {
         <span
           className={`text-[9px] uppercase tracking-wider shrink-0 ${SOURCE_COLOR[sub.sourceType]}`}
         >
-          {SOURCE_LABEL[sub.sourceType]}
+          <UiText>{SOURCE_LABEL[sub.sourceType]}</UiText>
         </span>
         <span className="text-text/60 font-mono text-[10px]">
           ×{sub.count}
@@ -471,7 +478,7 @@ function BySourceTypeSection({ breakdown }: { breakdown: StatBreakdown }) {
           <>
             <div className="my-1 mx-3 border-t border-dashed border-border/40" />
             <div className="px-3 py-0.5 text-[9px] uppercase tracking-[0.14em] text-text/40">
-              Increased
+              <UiText>Increased</UiText>
             </div>
             {increasedByType.map((s) => renderRow(s, 'increased'))}
           </>
@@ -480,7 +487,7 @@ function BySourceTypeSection({ breakdown }: { breakdown: StatBreakdown }) {
           <>
             <div className="my-1 mx-3 border-t border-dashed border-border/40" />
             <div className="px-3 py-0.5 text-[9px] uppercase tracking-[0.14em] text-text/40">
-              Multiplicative
+              <UiText>Multiplicative</UiText>
             </div>
             {moreByType.map((s) => renderRow(s, 'more'))}
           </>
@@ -523,7 +530,7 @@ function SourcesBody({
       </>
     ) : (
       <div className="border-b border-border/40 px-3 py-2 text-[11px] italic text-text/50">
-        Loading breakdown...
+        <UiText>Loading breakdown...</UiText>
       </div>
     )
   ) : null
@@ -534,7 +541,7 @@ function SourcesBody({
         {sectionLabel('Additive (+)', fmtSubtotal(addSubtotal))}
         <ul className="space-y-1 px-3 py-2">
           {orderedAdd.length === 0 ? (
-            <li className="italic text-text/40">No additive sources</li>
+            <li className="italic text-text/40"><UiText>No additive sources</UiText></li>
           ) : (
             orderedAdd.map((s, i) => (
               <SourceItem key={i} s={s} statKey={statKey} index={i} itemByName={itemByName} />
@@ -571,6 +578,8 @@ export default function SourceTooltip({
   onRequestBreakdown,
   title,
 }: Props) {
+  const ui = useUiText()
+  const { display } = useGameTranslations()
   const hasMore = !!moreSources && moreSources.length > 0
   const triggerRef = useRef<HTMLDivElement>(null)
   const tooltipRef = useRef<HTMLDivElement>(null)
@@ -692,10 +701,10 @@ export default function SourceTooltip({
               }}
             >
               <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-accent-hot">
-                Sources
+                {ui('Sources')}
               </span>
               <span className="text-[9px] uppercase tracking-[0.12em] text-text/40">
-                Right-click to pin
+                {ui('Right-click to pin')}
               </span>
             </div>
             <SourcesBody
@@ -760,9 +769,9 @@ export default function SourceTooltip({
                   <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent-hot truncate">
                     {(() => {
                       const resolved = title ?? statName(statKey)
-                      return resolved === statKey
+                      return display(resolved === statKey
                         ? humanizeStatKey(statKey)
-                        : resolved
+                        : resolved)
                     })()}
                   </span>
                   <span className="font-mono text-[10px] text-text/60 truncate">
@@ -773,8 +782,8 @@ export default function SourceTooltip({
                   type="button"
                   onClick={() => setPinned(false)}
                   className="flex h-6 w-6 items-center justify-center rounded-[2px] text-[14px] leading-none text-faint transition-colors hover:bg-accent-hot/10 hover:text-accent-hot"
-                  aria-label="Close source breakdown"
-                  title="Close (Esc)"
+                  aria-label={ui('Close source breakdown')}
+                  title={ui('Close (Esc)')}
                 >
                   ×
                 </button>

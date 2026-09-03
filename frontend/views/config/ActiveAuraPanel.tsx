@@ -4,17 +4,22 @@ import { getItemImage, resolveSkillIcon, skills } from '@data'
 import { useBuild } from '../../store/build'
 import { mercAuraKey, mercGrantedAuras } from '../../utils/build/mercStats'
 import { CountBadge, Panel } from './configPrimitives'
+import { useUiText } from '../../localization/uiText'
+import { useGameTranslations } from '../../localization/game'
 
 function SectionLabel({ children }: { children: string }) {
+  const ui = useUiText()
   return (
     <div className="mb-1.5 mt-3 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-faint first:mt-0">
-      <span className="text-accent-hot/80">{children}</span>
+      <span className="text-accent-hot/80">{ui(children)}</span>
       <span aria-hidden className="h-px flex-1 bg-border" />
     </div>
   )
 }
 
 export default function ActiveAuraPanel() {
+  const ui = useUiText()
+  const { game, display } = useGameTranslations()
   const classId = useBuild((s) => s.classId)
   const skillRanks = useBuild((s) => s.skillRanks)
   const activeAuraId = useBuild((s) => s.activeAuraId)
@@ -51,7 +56,7 @@ export default function ActiveAuraPanel() {
       {mercAuras.length > 0 && <SectionLabel>Hero Skills</SectionLabel>}
       {auraSkills.length === 0 ? (
         <p className="font-mono text-[12px] tracking-[0.04em] text-muted italic">
-          No auras available for this class.
+          {ui('No auras available for this class.')}
         </p>
       ) : (
         <ul className="space-y-2">
@@ -76,7 +81,7 @@ export default function ActiveAuraPanel() {
                 checked={activeAuraId === null}
                 onChange={() => setActiveAura(null)}
               />
-              <span className="text-sm font-medium text-muted">None</span>
+              <span className="text-sm font-medium text-muted">{ui('None')}</span>
             </label>
           </li>
           {auraSkills.map((s) => {
@@ -117,13 +122,13 @@ export default function ActiveAuraPanel() {
                       <div
                         className={`truncate text-sm font-medium ${checked ? 'text-accent-hot' : 'text-text'}`}
                       >
-                        {s.name}
+                        {game('talent', { fallback: s.name })}
                       </div>
                     </span>
                   </span>
                   {!ready && (
                     <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-                      not learned
+                      {ui('not learned')}
                     </span>
                   )}
                 </label>
@@ -188,9 +193,9 @@ export default function ActiveAuraPanel() {
                         <div
                           className={`truncate text-sm font-medium ${enabled ? 'text-accent-hot' : 'text-text'}`}
                         >
-                          {aura.name}
+                      {game('talent', { fallback: aura.name })}
                           <span className="ml-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted">
-                            {level}
+                      {display(level)}
                           </span>
                         </div>
                         <div className="truncate text-[10px] text-faint">

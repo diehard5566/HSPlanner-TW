@@ -193,20 +193,20 @@ const LINE_STYLE_CLASS: Record<TooltipLineStyle, string> = {
   muted: 'text-muted',
 }
 
-function badgeTitle(style: TooltipLineStyle): string {
-  return style === 'implicit'
+function badgeTitle(style: TooltipLineStyle, display: (text: string) => string): string {
+  return display(style === 'implicit'
     ? 'Custom value (overrides base implicit)'
-    : 'Custom value (overrides tier+roll)'
+    : 'Custom value (overrides tier+roll)')
 }
 
 function ItemTooltipView({ model }: { model: ItemTooltipModel }) {
-  const { game, gameAny } = useGameTranslations()
+  const { game, display } = useGameTranslations()
   return (
     <>
       <TooltipHeader
         tone={model.tone}
         title={game('item', { fallback: model.name })}
-        subtitle={gameAny(model.typeLine)}
+        subtitle={display(model.typeLine)}
         image={getItemImage(model.imageId)}
       />
       {model.sections.map((section, i) => (
@@ -214,26 +214,26 @@ function ItemTooltipView({ model }: { model: ItemTooltipModel }) {
           <SectionContent section={section} />
         </TooltipSection>
       ))}
-      {model.footer && <TooltipFooter>{gameAny(model.footer)}</TooltipFooter>}
+      {model.footer && <TooltipFooter>{display(model.footer)}</TooltipFooter>}
     </>
   )
 }
 
 function SectionContent({ section }: { section: TooltipSectionModel }) {
-  const { gameAny } = useGameTranslations()
+  const { display } = useGameTranslations()
   return (
     <>
       {section.header && (
         <TooltipSectionHeader
           tone={section.header.tone}
-          trailing={section.header.trailing}
+          trailing={section.header.trailing ? display(section.header.trailing) : undefined}
         >
-          {gameAny(section.header.text)}
+          {display(section.header.text)}
         </TooltipSectionHeader>
       )}
       <SectionLines lines={section.lines} />
       {section.footnote && (
-        <p className="text-[10px] text-muted/70 italic mt-1">{gameAny(section.footnote)}</p>
+        <p className="text-[10px] text-muted/70 italic mt-1">{display(section.footnote)}</p>
       )}
     </>
   )
@@ -272,17 +272,17 @@ function BaseStatRows({ lines }: { lines: TooltipLine[] }) {
 }
 
 function TextLines({ lines }: { lines: TooltipLine[] }) {
-  const { gameAny } = useGameTranslations()
+  const { display } = useGameTranslations()
   return (
     <ul className="space-y-0.5 text-[12px]">
       {lines.map((line, i) =>
         line.kind === 'text' ? (
           <li key={i} className={LINE_STYLE_CLASS[line.style]}>
-            {gameAny(line.text)}
+            {display(line.text)}
             {line.badge && (
               <span
                 className="ml-1 font-mono text-[10px] uppercase tracking-[0.14em] text-accent-hot/70"
-                title={badgeTitle(line.style)}
+                title={badgeTitle(line.style, display)}
               >
                 {line.badge}
               </span>
@@ -295,7 +295,7 @@ function TextLines({ lines }: { lines: TooltipLine[] }) {
 }
 
 function DescriptionLines({ lines }: { lines: TooltipLine[] }) {
-  const { gameAny } = useGameTranslations()
+  const { display } = useGameTranslations()
   return (
     <>
       {lines.map((line, i) =>
@@ -308,7 +308,7 @@ function DescriptionLines({ lines }: { lines: TooltipLine[] }) {
                 : 'text-[11px] text-muted italic mt-1'
             }
           >
-            {gameAny(line.text)}
+            {display(line.text)}
           </p>
         ) : null,
       )}
@@ -317,7 +317,7 @@ function DescriptionLines({ lines }: { lines: TooltipLine[] }) {
 }
 
 function GrantedSkillEntries({ lines }: { lines: TooltipLine[] }) {
-  const { gameAny } = useGameTranslations()
+  const { display } = useGameTranslations()
   return (
     <ul className="space-y-1 text-[11px]">
       {lines.map((line, i) =>
@@ -332,24 +332,24 @@ function GrantedSkillEntries({ lines }: { lines: TooltipLine[] }) {
                   style={{ imageRendering: 'pixelated' }}
                 />
               )}
-              {gameAny(line.title)}
+              {display(line.title)}
               {line.suffix && (
                 <>
                   {' '}
-                  <span className="text-muted text-[10px]">{line.suffix}</span>
+                  <span className="text-muted text-[10px]">{display(line.suffix)}</span>
                 </>
               )}
             </div>
             {line.desc && (
               <div className="text-muted text-[10px] italic leading-snug">
-                {gameAny(line.desc)}
+                {display(line.desc)}
               </div>
             )}
             {line.lines.length > 0 && (
               <ul className="mt-0.5 ml-2 space-y-0.5 text-text/80">
                 {line.lines.map((l, j) => (
                   <li key={j} className="text-[11px]">
-                    {gameAny(l)}
+                    {display(l)}
                   </li>
                 ))}
               </ul>
@@ -362,7 +362,7 @@ function GrantedSkillEntries({ lines }: { lines: TooltipLine[] }) {
 }
 
 function SocketEntries({ lines }: { lines: TooltipLine[] }) {
-  const { gameAny } = useGameTranslations()
+  const { display } = useGameTranslations()
   return (
     <ul className="space-y-1.5 text-[11px]">
       {lines.map((line, i) => {
@@ -378,10 +378,10 @@ function SocketEntries({ lines }: { lines: TooltipLine[] }) {
               />
             )}
             <div className="min-w-0">
-              <div className="text-[11px] text-muted">{gameAny(line.title)}</div>
+              <div className="text-[11px] text-muted">{display(line.title)}</div>
               <ul className="space-y-0.5 text-accent-hot">
                 {line.lines.map((l, j) => (
-                  <li key={j}>{gameAny(l)}</li>
+                  <li key={j}>{display(l)}</li>
                 ))}
               </ul>
             </div>
@@ -393,7 +393,7 @@ function SocketEntries({ lines }: { lines: TooltipLine[] }) {
 }
 
 function SetEntries({ lines }: { lines: TooltipLine[] }) {
-  const { gameAny } = useGameTranslations()
+  const { display } = useGameTranslations()
   return (
     <ul className="space-y-1">
       {lines.map((line, i) =>
@@ -404,11 +404,11 @@ function SetEntries({ lines }: { lines: TooltipLine[] }) {
               line.style === 'set-items' ? 'mt-2 border-t border-white/10 pt-2' : ''
             }`}
           >
-            <div className="text-[10px] uppercase tracking-[0.12em]">{gameAny(line.title)}</div>
+            <div className="text-[10px] uppercase tracking-[0.12em]">{display(line.title)}</div>
             <ul className="ml-1 space-y-0.5">
               {line.lines.map((d, j) => (
                 <li key={j} className={d.startsWith(EQUIPPED_MARK) ? 'text-green-300' : undefined}>
-                  {gameAny(d)}
+                  {display(d)}
                 </li>
               ))}
             </ul>
@@ -420,16 +420,16 @@ function SetEntries({ lines }: { lines: TooltipLine[] }) {
 }
 
 function ProcEntries({ lines }: { lines: TooltipLine[] }) {
-  const { gameAny } = useGameTranslations()
+  const { display } = useGameTranslations()
   return (
     <ul className="space-y-1.5 text-[12px]">
       {lines.map((line, i) =>
         line.kind === 'entry' ? (
           <li key={i} className="text-emerald-300">
-            {gameAny(line.title)}
+            {display(line.title)}
             {line.desc && (
               <div className="text-[10px] text-muted italic leading-snug mt-0.5">
-                {gameAny(line.desc)}
+                {display(line.desc)}
               </div>
             )}
           </li>
@@ -454,6 +454,7 @@ export function ItemCard({
   state?: CompareState
   className?: string
 }) {
+  const { display } = useGameTranslations()
   const stateClass = state ? `compare-card is-${state}` : ''
 
   if (!base) {
@@ -467,7 +468,7 @@ export function ItemCard({
           </div>
         )}
         <div className="flex items-center justify-center text-center px-3 py-6">
-          <p className="text-[11px] text-faint italic">empty slot</p>
+          <p className="text-[11px] text-faint italic">{display('Empty slot')}</p>
         </div>
       </div>
     )

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import type { ReactNode } from 'react'
 import { TONE_BORDER, TONE_GLOW, TONE_RGB, TONE_TEXT } from '../tooltipTones'
 import type { TooltipTone } from '../tooltipTones'
+import { useGameTranslations } from '../../localization/game'
 
 interface TooltipProps {
   content: ReactNode
@@ -228,6 +229,7 @@ export function TooltipHeader({
   tone?: TooltipTone
   image?: string
 }) {
+  const { display } = useGameTranslations()
   const rgb = TONE_RGB[tone]
   return (
     <div
@@ -243,11 +245,11 @@ export function TooltipHeader({
             textShadow: `0 0 10px rgba(${rgb}, 0.45), 0 0 4px rgba(${rgb}, 0.25)`,
           }}
         >
-          {title}
+          {typeof title === 'string' ? display(title) : title}
         </div>
         {subtitle && (
           <div className="relative mt-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-faint">
-            {subtitle}
+            {typeof subtitle === 'string' ? display(subtitle) : subtitle}
           </div>
         )}
       </div>
@@ -308,14 +310,15 @@ export function TooltipSectionHeader({
   trailing?: ReactNode
   tone?: TooltipSectionTone
 }) {
+  const { display } = useGameTranslations()
   return (
     <div
       className={`-mx-3 -mt-2 mb-2 px-3 py-1 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.12em] border-b border-border/40 ${TOOLTIP_SECTION_HEADER_TONE[tone]}`}
     >
-      <span>{children}</span>
+      <span>{typeof children === 'string' ? display(children) : children}</span>
       {trailing != null && (
         <span className="font-mono normal-case text-text/70 tracking-normal">
-          {trailing}
+          {typeof trailing === 'string' ? display(trailing) : trailing}
         </span>
       )}
     </div>
@@ -323,9 +326,10 @@ export function TooltipSectionHeader({
 }
 
 export function TooltipFooter({ children }: { children: ReactNode }) {
+  const { display } = useGameTranslations()
   return (
     <div className="px-3 py-1.5 border-t border-border/70 bg-panel-2 text-[10px] font-medium uppercase tracking-[0.12em] text-faint">
-      {children}
+      {typeof children === 'string' ? display(children) : children}
     </div>
   )
 }
@@ -339,6 +343,7 @@ export function TooltipStat({
   value: ReactNode
   variant?: 'default' | 'muted' | 'red' | 'blue' | 'green'
 }) {
+  const { display } = useGameTranslations()
   const valueColor = {
     default: 'text-accent-hot',
     muted: 'text-faint',
@@ -348,31 +353,33 @@ export function TooltipStat({
   }[variant]
   return (
     <div className="flex items-baseline justify-between gap-3 leading-[1.65] text-[12px]">
-      <span className="text-text/90">{label}</span>
+      <span className="text-text/90">{typeof label === 'string' ? display(label) : label}</span>
       <span className={`font-mono tabular-nums ${valueColor}`}>{value}</span>
     </div>
   )
 }
 
 export function TooltipText({ children }: { children: ReactNode }) {
-  return <div className="text-[12px] leading-[1.55] text-text/90">{children}</div>
+  const { display } = useGameTranslations()
+  return <div className="text-[12px] leading-[1.55] text-text/90">{typeof children === 'string' ? display(children) : children}</div>
 }
 
 export function UnsupportedModsList({ lines }: { lines: ReactNode[] }) {
+  const { display } = useGameTranslations()
   return (
     <>
       <div className="mb-1 text-[10px] uppercase tracking-[0.12em] text-muted">
-        Not Yet Supported
+        {display('Not Yet Supported')}
       </div>
       <ul className="space-y-0.5 opacity-60">
         {lines.map((line, i) => (
           <li key={i} className="text-[12px] leading-[1.55] text-text/90">
-            {line}
+            {typeof line === 'string' ? display(line) : line}
           </li>
         ))}
       </ul>
       <p className="mt-1 text-[10px] italic text-muted/70">
-        These mods are not yet calculated by the planner.
+        {display('These mods are not yet calculated by the planner.')}
       </p>
     </>
   )

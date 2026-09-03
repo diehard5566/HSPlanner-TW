@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { CornerMarks } from './CornerMarks'
+import { useUiText } from '../../localization/uiText'
 
 export function Panel({
   title,
@@ -12,6 +13,7 @@ export function Panel({
   trailing?: ReactNode
   children: ReactNode
 }) {
+  const ui = useUiText()
   return (
     <section
       className="relative overflow-hidden rounded-md border border-border p-4"
@@ -31,13 +33,13 @@ export function Panel({
             style={{ boxShadow: '0 0 6px rgba(224,184,100,0.5)' }}
           />
           <h3 className="m-0 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-accent-hot/70">
-            {title}
+            {ui(title)}
           </h3>
         </div>
         {trailing}
       </div>
       {subtitle && (
-        <p className="mb-3 text-[12px] leading-relaxed text-muted">{subtitle}</p>
+        <p className="mb-3 text-[12px] leading-relaxed text-muted">{ui(subtitle)}</p>
       )}
       {children}
     </section>

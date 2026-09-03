@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { motion } from 'motion/react'
 import { backdropVariants, panelVariants } from '../../utils/motion'
 import { useDialogA11y } from '../../hooks/useDialogA11y'
+import { useUiText } from '../../localization/uiText'
 
 export const MODAL_FOOTER_CLASS =
   'flex items-center justify-end gap-2 border-t border-border px-6 py-3'
@@ -48,6 +49,7 @@ export function Modal({
   dataTour,
   children,
 }: ModalProps) {
+  const ui = useUiText()
   const panelRef = useRef<HTMLDivElement>(null)
   const fallbackId = useId()
   const headingId = titleId ?? fallbackId
@@ -99,16 +101,18 @@ export function Modal({
                 aria-hidden
                 className="inline-block h-1 w-1 rounded-full bg-accent"
               />
-              {eyebrow}
+              {typeof eyebrow === 'string' ? ui(eyebrow) : eyebrow}
             </div>
             <h2
               id={headingId}
               className={`m-0 text-[17px] font-semibold tracking-[-0.01em] text-text ${titleClassName ?? ''}`}
             >
-              {title}
+              {typeof title === 'string' ? ui(title) : title}
             </h2>
             {subtitle != null && (
-              <div className="mt-1 text-[12px] text-muted">{subtitle}</div>
+              <div className="mt-1 text-[12px] text-muted">
+                {typeof subtitle === 'string' ? ui(subtitle) : subtitle}
+              </div>
             )}
           </div>
           <div className="ml-auto flex shrink-0 items-center gap-2">
@@ -117,10 +121,10 @@ export function Modal({
               type="button"
               onClick={onClose}
               disabled={closeDisabled}
-              aria-label="Close"
+              aria-label={ui('Close')}
               className="rounded-md border border-border px-3 py-1.5 text-[12px] text-muted transition-colors hover:border-accent-deep hover:text-accent-hot disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Close
+              {ui('Close')}
             </button>
           </div>
         </header>

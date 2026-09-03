@@ -29,6 +29,8 @@ import {
   toggleSocketVisible,
   toggleWeaponType,
 } from './filterModel'
+import { useUiText } from '../../localization/uiText'
+import { useGameTranslations } from '../../localization/game'
 
 const HEADER_BTN_CLASS =
   'h-[16px] w-[16px] rounded-[2px] font-mono text-[9px] font-semibold uppercase text-accent-deep transition-colors hover:text-accent-hot'
@@ -43,6 +45,8 @@ interface TypePanelProps {
 }
 
 export function TypePanel({ filter, typeId, apply }: TypePanelProps) {
+  const ui = useUiText()
+  const { display } = useGameTranslations()
   const type = filter.types[typeId]
   const label = ITEM_TYPE_LABELS.get(typeId) ?? `t${typeId}`
   if (!type) return null
@@ -51,12 +55,12 @@ export function TypePanel({ filter, typeId, apply }: TypePanelProps) {
 
   return (
     <Panel
-      title={`${label} · visibility`}
+      title={`${display(label)} · ${ui('visibility')}`}
       trailing={<CopyControls filter={filter} typeId={typeId} apply={apply} />}
     >
       <div className="flex flex-wrap items-start gap-x-10 gap-y-5">
         <div>
-          <div className={SUBLABEL_CLASS}>Rarity × tier</div>
+          <div className={SUBLABEL_CLASS}>{ui('Rarity × tier')}</div>
           <table className="border-separate border-spacing-[3px]">
             <thead>
               <tr>
@@ -85,7 +89,7 @@ export function TypePanel({ filter, typeId, apply }: TypePanelProps) {
                       onClick={() => apply(toggleRarityRow(filter, typeId, r))}
                       className={`font-mono text-[11px] transition-opacity hover:opacity-70 ${RARITY_TEXT[rarity]}`}
                     >
-                      {RARITY_LABEL[rarity]}
+                      {display(RARITY_LABEL[rarity])}
                     </button>
                   </td>
                   {TIER_LABELS.map((t, tier) => (
@@ -109,7 +113,7 @@ export function TypePanel({ filter, typeId, apply }: TypePanelProps) {
         </div>
 
         <div>
-          <div className={SUBLABEL_CLASS}>Socket count</div>
+          <div className={SUBLABEL_CLASS}>{ui('Socket count')}</div>
           <table className="border-separate border-spacing-[3px]">
             <thead>
               <tr>
@@ -143,7 +147,7 @@ export function TypePanel({ filter, typeId, apply }: TypePanelProps) {
 
         {isWeapon && (
           <div className="min-w-0 flex-1">
-            <div className={SUBLABEL_CLASS}>Weapon types</div>
+            <div className={SUBLABEL_CLASS}>{ui('Weapon types')}</div>
             <div className="grid grid-cols-4 gap-1.5">
               {WEAPON_TYPES.map((w, bit) => {
                 if (!w) return null
@@ -159,7 +163,7 @@ export function TypePanel({ filter, typeId, apply }: TypePanelProps) {
                         : 'border-border-2 text-faint hover:text-muted'
                     }`}
                   >
-                    {w}
+                    {display(w)}
                   </button>
                 )
               })}
@@ -176,11 +180,13 @@ export function TypePanel({ filter, typeId, apply }: TypePanelProps) {
 }
 
 function CopyControls({ filter, typeId, apply }: TypePanelProps) {
+  const ui = useUiText()
+  const { display } = useGameTranslations()
   return (
     <div className="flex items-center gap-2">
       <button
         type="button"
-        title="Copy this type's whole configuration to every other type"
+        title={ui("Copy this type's whole configuration to every other type")}
         onClick={() =>
           apply(
             copyTypeConfig(
@@ -192,7 +198,7 @@ function CopyControls({ filter, typeId, apply }: TypePanelProps) {
         }
         className={FILTER_BTN_CLASS}
       >
-        Copy to all
+        {ui('Copy to all')}
       </button>
       <select
         value=""
@@ -202,13 +208,13 @@ function CopyControls({ filter, typeId, apply }: TypePanelProps) {
             apply(copyTypeConfig(filter, typeId, [next]))
           }
         }}
-        aria-label="Copy configuration to a specific type"
+        aria-label={ui('Copy configuration to a specific type')}
         className="h-[28px] rounded-[3px] border border-border-2 bg-panel-2 px-2 text-[12px] text-muted outline-none transition-colors hover:border-accent-deep focus:border-accent-deep"
       >
-        <option value="">Copy to…</option>
+        <option value="">{ui('Copy to…')}</option>
         {ITEM_TYPES.filter((t) => t.id !== typeId).map((t) => (
           <option key={t.id} value={t.id}>
-            {t.label}
+            {display(t.label)}
           </option>
         ))}
       </select>
