@@ -46,9 +46,9 @@
     },
     "updater": {
       "endpoints": [
-        "https://github.com/zium1337/HSPlanner/releases/latest/download/latest.json"
+        "https://github.com/diehard5566/HSPlanner-TW/releases/latest/download/latest.json"
       ],
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDYxRDIzNjY5QjI0MUExOTMKUldTVG9VR3lhVGJTWWVKdDQ4TWtFTG1mV0E4NkFSd1pDWEw3YzZnTGw0UVFNL25hK3ZkTFI1QzcK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdERUVBNDEyQTE2RTk1ODIKUldTQ2xXNmhFcVR1ZmFkMVBBMGRHSjc5V2J1dHZucS91b0lMaTM5Q0pJcGpiK2xNYlRCdWtRWGUK",
       "windows": {
         "installMode": "passive"
       }

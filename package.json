@@ -1,7 +1,7 @@
 {
   "name": "hsplanner",
   "private": true,
-  "version": "1.0.7",
+  "version": "1.0.8",
   "type": "module",
   "scripts": {
     "generate:i18n": "node tools/localization/generate-localization.mjs",
