@@ -11,16 +11,17 @@ import { openExternalLink } from '../../utils/externalUrl'
 import { inTauriRuntime } from '../../utils/installUpdate'
 import { UI_ZOOM_STEPS } from '../../utils/uiZoom'
 import { APP_VERSION, GITHUB_REPO } from '../../utils/version'
+import { useI18n, type UiKey } from '../../localization/i18n'
 
 const IS_MAC =
   typeof navigator !== 'undefined' && /Mac/i.test(navigator.platform)
 const SAVE_SHORTCUT = IS_MAC ? '⌘S' : 'Ctrl+S'
 
-const SCALE_LABEL: Record<NumberScale, string> = {
-  none: 'None',
-  thousands: 'Thousands',
-  millions: 'Millions',
-  billions: 'Billions',
+const SCALE_LABEL: Record<NumberScale, UiKey> = {
+  none: 'settings.scale.none',
+  thousands: 'settings.scale.thousands',
+  millions: 'settings.scale.millions',
+  billions: 'settings.scale.billions',
 }
 
 const SCALE_SAMPLE: Record<NumberScale, string> = {
@@ -37,6 +38,7 @@ interface SettingsModalProps {
 }
 
 export default function SettingsModal({ onClose }: SettingsModalProps) {
+  const { locale, setLocale, t } = useI18n()
   const autoSave = useSettings((s) => s.autoSave)
   const numberScale = useSettings((s) => s.numberScale)
   const setAutoSave = useSettings((s) => s.setAutoSave)
@@ -56,13 +58,13 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
     <Modal
       onClose={onClose}
       panelClassName="w-[560px] max-w-[92vw] max-h-[86vh]"
-      eyebrow="Preferences"
-      title="Settings"
+      eyebrow={t('settings.eyebrow')}
+      title={t('common.settings')}
       titleId="settings-modal-title"
-      subtitle="Stored on this device"
+      subtitle={t('settings.subtitle')}
     >
       <div className="flex flex-col gap-6 overflow-y-auto px-6 py-5">
-        <Section title="Saving">
+        <Section title={t('settings.saving')}>
           <label className="flex cursor-pointer flex-col gap-1">
             <span className="flex items-center gap-2.5">
               <input
@@ -72,11 +74,11 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                 className="shrink-0"
               />
               <span className="text-[13px] font-semibold text-text">
-                Auto-save
+                {t('settings.autoSave')}
               </span>
             </span>
             <span className="pl-6 text-[12px] leading-snug text-muted">
-              Saves changes to the active build as you make them.
+              {t('settings.autoSaveHelp')}
             </span>
           </label>
           <p
@@ -85,18 +87,18 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
             }`}
           >
             {autoSave
-              ? `${SAVE_SHORTCUT} still saves instantly`
-              : `Manual mode — press ${SAVE_SHORTCUT} to save the active build`}
+              ? t('settings.saveInstantly', { shortcut: SAVE_SHORTCUT })
+              : t('settings.manualSave', { shortcut: SAVE_SHORTCUT })}
           </p>
         </Section>
 
-        <Section title="Numbers">
+        <Section title={t('settings.numbers')}>
           <div className="mb-2 text-[13px] font-semibold text-text">
-            Largest unit
+            {t('settings.largestUnit')}
           </div>
           <div
             role="radiogroup"
-            aria-label="Largest number unit"
+            aria-label={t('settings.largestUnitA11y')}
             className="grid grid-cols-4 gap-1.5"
           >
             {NUMBER_SCALES.map((scale) => {
@@ -134,7 +136,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                           : undefined
                       }
                     />
-                    {SCALE_LABEL[scale]}
+                    {t(SCALE_LABEL[scale])}
                   </span>
                   <span className="font-mono text-[11px] tabular-nums">
                     {SCALE_SAMPLE[scale]}
@@ -144,7 +146,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
             })}
           </div>
           <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-            Preview ·{' '}
+            {t('settings.preview')} ·{' '}
             <span className="normal-case text-accent-hot/80">
               {PREVIEW_SAMPLES.map((n) => compact(n, numberScale)).join('  ·  ')}
             </span>
@@ -152,13 +154,13 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
         </Section>
 
         {inTauriRuntime() && (
-          <Section title="Display">
+          <Section title={t('settings.display')}>
             <div className="mb-2 text-[13px] font-semibold text-text">
-              UI scale
+              {t('settings.uiScale')}
             </div>
             <div
               role="radiogroup"
-              aria-label="UI scale"
+              aria-label={t('settings.uiScale')}
               className="grid grid-cols-6 gap-1.5"
             >
               {UI_ZOOM_STEPS.map((step) => {
@@ -190,12 +192,37 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
               })}
             </div>
             <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-              Ctrl + / Ctrl - zooms too, this is the one that sticks
+              {t('settings.uiScaleHelp')}
             </p>
           </Section>
         )}
 
-        <Section title="Credits">
+        <Section title={t('settings.language')}>
+          <div role="radiogroup" aria-label={t('settings.language')} className="grid grid-cols-2 gap-1.5">
+            {(['en', 'zh-TW'] as const).map((value) => {
+              const active = locale === value
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setLocale(value)}
+                  className={`rounded-[3px] border px-3 py-2 text-[12px] transition-colors ${
+                    active
+                      ? 'border-accent-deep bg-accent-deep/20 text-accent-hot'
+                      : 'border-border-2 bg-panel-2 text-muted hover:border-accent-deep/60 hover:text-text'
+                  }`}
+                >
+                  {t(value === 'en' ? 'language.en' : 'language.zhTW')}
+                </button>
+              )
+            })}
+          </div>
+          <p className="mt-2 text-[12px] leading-snug text-muted">{t('settings.languageHelp')}</p>
+        </Section>
+
+        <Section title={t('settings.credits')}>
           <div className="flex items-center gap-2.5">
             <Logo size={20} glow title="HSPlanner" />
             <span
@@ -209,13 +236,12 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
             </span>
           </div>
           <p className="mt-2 text-[12px] text-muted">
-            Built and maintained by{' '}
-            <span className="text-text">zium</span>.
+            {t('settings.builtBy', { name: 'zium' })}
           </p>
           <div className="mt-2.5 flex items-center gap-2">
             <ExternalChip
               href="https://ko-fi.com/zium1337"
-              label="Support on Ko-fi"
+              label={t('settings.support')}
             />
             <ExternalChip
               href={`https://github.com/${GITHUB_REPO}`}
@@ -223,7 +249,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
             />
           </div>
           <p className="mt-3 border-t border-border pt-2.5 font-mono text-[10px] uppercase tracking-[0.14em] leading-relaxed text-faint">
-            Fan-made planner. Hero Siege © Panic Art Studios — not affiliated.
+            {t('settings.disclaimer')}
           </p>
         </Section>
       </div>

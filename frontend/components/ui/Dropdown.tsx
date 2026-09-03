@@ -13,6 +13,7 @@ export interface DropdownOption {
   id: string
   label: string
   meta?: ReactNode
+  searchTerms?: string
 }
 
 interface DropdownProps {
@@ -119,7 +120,9 @@ export default function Dropdown({
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!q) return options
-    return options.filter((o) => o.label.toLowerCase().includes(q))
+    return options.filter((o) =>
+      `${o.label} ${o.searchTerms ?? ''}`.toLowerCase().includes(q),
+    )
   }, [options, query])
 
   const showClear = clearLabel != null && value !== null

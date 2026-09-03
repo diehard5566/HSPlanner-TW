@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { gameConfig } from '@data'
 import type { StatDef } from '../../types'
+import { useGameTranslations } from '../../localization/game'
 
 export type StatRow = Pick<StatDef, 'key' | 'name' | 'format'>
 
@@ -20,14 +21,17 @@ interface Props {
 }
 
 export function CustomAffixList({ onPick }: Props) {
+  const { game, searchText } = useGameTranslations()
   const [query, setQuery] = useState('')
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!q) return STAT_ROWS
     return STAT_ROWS.filter(
-      (s) => s.name.toLowerCase().includes(q) || s.key.includes(q),
+      (s) =>
+        searchText('attribute', { fallback: s.name }).includes(q) ||
+        s.key.includes(q),
     )
-  }, [query])
+  }, [query, searchText])
 
   return (
     <div className="flex min-h-0 flex-1 flex-col border-t border-border">
@@ -66,7 +70,9 @@ export function CustomAffixList({ onPick }: Props) {
               <span className="shrink-0 tabular-nums text-accent-hot/70 group-hover:text-accent-hot">
                 +1{s.format === 'percent' ? '%' : ''}
               </span>{' '}
-              <span className="min-w-0 flex-1 truncate">{s.name}</span>{' '}
+              <span className="min-w-0 flex-1 truncate">
+                {game('attribute', { fallback: s.name })}
+              </span>{' '}
               <span className="shrink-0 text-[10px] text-faint">[custom]</span>
             </button>
           </li>

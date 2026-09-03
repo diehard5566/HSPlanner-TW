@@ -1,5 +1,6 @@
 <img width="1600" height="360" alt="wordmark-1600" src="https://github.com/user-attachments/assets/fe4fd4b3-a475-438a-a87e-53fd8080632d" />
 
+[English](README.md) | [繁體中文](README.zh-TW.md)
 
 A desktop build planner for **Hero Siege** - a calculator for the talent tree, gear, stats, and skills.
 
@@ -148,6 +149,7 @@ npm run tauri:dev
 |---|---|
 | `npm run tauri:dev` | Run the desktop app in dev mode |
 | `npm run tauri:build` | Build the installers/binaries |
+| `npm run generate:i18n` | Generate compact runtime localization maps from `language/` |
 | `npm test` | Vitest suite |
 | `npm run lint` | ESLint |
 | `npm run parity` | Rust ↔ TS calculation parity gate (run after touching `calc`) |

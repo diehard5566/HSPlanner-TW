@@ -19,6 +19,7 @@ import {
 } from '../../components/ui/Tooltip'
 import { TONE_BORDER, TONE_GLOW } from '../../components/tooltipTones'
 import { resolveSubskillIconUrl } from './subskillSprites'
+import { useGameTranslations } from '../../localization/game'
 
 function RankValue({
   current,
@@ -86,6 +87,8 @@ export default function SubskillTooltip({
   currentPerformance: BuildPerformance
   previewPerformance: BuildPerformance | null
 }) {
+  const { game } = useGameTranslations()
+  const displayName = game('subTalent', { fallback: sub.name })
   const nextRank = Math.min(rank + 1, sub.maxRank)
   const hasNext = nextRank > rank
 
@@ -155,10 +158,10 @@ export default function SubskillTooltip({
           glyph ? (
             <>
               <span className="mr-1.5">{glyph}</span>
-              {sub.name}
+              {displayName}
             </>
           ) : (
-            sub.name
+            displayName
           )
         }
         subtitle={
@@ -172,7 +175,7 @@ export default function SubskillTooltip({
       />
       {sub.description && (
         <TooltipSection>
-          <TooltipText>{sub.description}</TooltipText>
+          <TooltipText>{game('subTalent', { fallback: sub.description })}</TooltipText>
         </TooltipSection>
       )}
       {tagChange && (

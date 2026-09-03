@@ -10,6 +10,7 @@ import type { SourceContribution } from '../../utils/item/stats'
 import type { StatBreakdown, StatBreakdownKind } from '../../utils/calc/bridge'
 import type { AttributeKey, RangedStatMap, RangedValue } from '../../types'
 import { displayRange } from './statFormat'
+import { useGameTranslations } from '../../localization/game'
 
 export function AttributesStrip({
   attrs,
@@ -26,6 +27,7 @@ export function AttributesStrip({
   getBreakdown: (statKey: string, kind: StatBreakdownKind) => StatBreakdown | null
   requestBreakdown: (statKey: string, kind: StatBreakdownKind) => void
 }) {
+  const { game } = useGameTranslations()
   return (
     <div
       className="grid grid-cols-2 overflow-hidden rounded-[3px] border border-border sm:grid-cols-3 lg:grid-cols-6"
@@ -44,7 +46,7 @@ export function AttributesStrip({
             sources={sources}
             breakdown={getBreakdown(attr.key, 'attribute')}
             onRequestBreakdown={() => requestBreakdown(attr.key, 'attribute')}
-            title={attr.name}
+            title={game('attribute', { fallback: attr.name })}
           >
             <div
               className={`flex flex-col gap-1 px-3 py-2.5 transition-colors ${
@@ -57,7 +59,7 @@ export function AttributesStrip({
               }}
             >
               <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-faint">
-                {attr.name}
+                {game('attribute', { fallback: attr.name })}
               </span>
               <span
                 className={`font-mono text-[15px] font-semibold tabular-nums ${
@@ -100,6 +102,7 @@ export function StatRow({
   breakdown: StatBreakdown | null
   onRequestBreakdown: () => void
 }) {
+  const { game } = useGameTranslations()
   const hasMore = !!moreSources && moreSources.length > 0
   const displayValue: RangedValue = hasMore
     ? (statsCombined[statKey] ?? value)
@@ -129,7 +132,9 @@ export function StatRow({
               : 'hover:bg-accent-hot/4'
           } ${zero && !highlighted ? 'opacity-35' : ''}`}
         >
-          <span className="text-text">{statName(statKey)}</span>
+          <span className="text-text">
+            {game('attribute', { fallback: statName(statKey) })}
+          </span>
           <span
             className={`font-mono font-medium tabular-nums ${
               zero ? 'text-faint' : 'text-accent-hot'

@@ -40,10 +40,14 @@ import { MainSkillSection } from './stats/MainSkillPanel'
 import { SkillCard } from './stats/SkillCard'
 import { AttributesStrip, StatRow } from './stats/rows'
 import { EhpBreakdown } from './stats/EhpBreakdown'
+import { useI18n } from '../localization/i18n'
+import { useGameTranslations } from '../localization/game'
 
 const NO_SUBTREE: Record<string, RangedValue> = {}
 
 export default function StatsView() {
+  const { t } = useI18n()
+  const { searchAny } = useGameTranslations()
   const classId = useBuild((s) => s.classId)
   const inventory = useBuild((s) => s.inventory)
   const skillRanks = useBuild((s) => s.skillRanks)
@@ -58,7 +62,7 @@ export default function StatsView() {
   const normalizedQuery = query.trim().toLowerCase()
   const matches = (label: string) =>
     normalizedQuery.length > 0 &&
-    label.toLowerCase().includes(normalizedQuery)
+    searchAny(label).includes(normalizedQuery)
   const buildDeps = useBuildPerformanceDeps()
   const computed = useCalcResult<ComputedStats | null>(
     () => computeBuildStatsAsync(buildDeps),
@@ -406,7 +410,7 @@ export default function StatsView() {
               textShadow: '0 0 16px rgba(224,184,100,0.18)',
             }}
           >
-            Stats
+            {t('nav.stats')}
           </h2>
         </div>
         <div className="flex items-center gap-1.5">
@@ -449,7 +453,7 @@ export default function StatsView() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search stats, attributes, or skills…"
+          placeholder={t('stats.search')}
           data-search-input
           data-tour="stats-search"
           className="w-full rounded-[3px] border border-border-2 px-3 py-2 pl-9 pr-9 text-text placeholder:text-faint focus:border-accent-deep focus:outline-none focus:ring-2 focus:ring-accent-hot/15"
@@ -463,7 +467,7 @@ export default function StatsView() {
           <button
             onClick={() => setQuery('')}
             className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xs px-1.5 py-0.5 font-mono text-[12px] text-faint transition-colors hover:text-accent-hot"
-            aria-label="Clear search"
+            aria-label={t('tree.clearSearch')}
           >
             ×
           </button>
@@ -478,7 +482,7 @@ export default function StatsView() {
           if (visibleAttrs.length === 0) return null
           return (
             <Panel
-              title="Attributes"
+              title={t('stats.attributes')}
             >
               <AttributesStrip
                 attrs={visibleAttrs}
@@ -511,7 +515,7 @@ export default function StatsView() {
 
       {showSkills && (
         <>
-          <SectionHeading>Per-Skill Damage</SectionHeading>
+          <SectionHeading>{t('stats.perSkillDamage')}</SectionHeading>
           <Panel padded>
             {skillsForClass.length === 0 ? (
               <div className="py-2 text-center text-sm text-muted italic">
@@ -556,7 +560,7 @@ export default function StatsView() {
       )}
 
       {showEhp && (
-        <Panel title="Effective HP">
+        <Panel title={t('stats.effectiveHp')}>
           <EhpBreakdown stats={stats} statsCombined={statsCombined} />
         </Panel>
       )}
@@ -623,7 +627,7 @@ export default function StatsView() {
           )
           if (allSections.length === 0) {
             return (
-              <Panel title="All Stats">
+              <Panel title={t('stats.allStats')}>
                 <div className="py-2 text-center text-xs text-muted italic">
                   No matches.
                 </div>
@@ -631,7 +635,7 @@ export default function StatsView() {
             )
           }
           return (
-            <Panel title="All Stats">
+            <Panel title={t('stats.allStats')}>
               <div
                 className="md:columns-2"
                 style={{ columnGap: '2rem', columnFill: 'balance' }}

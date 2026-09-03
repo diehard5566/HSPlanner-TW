@@ -43,6 +43,7 @@ import NotesView from "./views/NotesView";
 import SkillsView from "./views/SkillsView";
 import StatsView from "./views/StatsView";
 import TreeView from "./views/TreeView";
+import { useI18n, type UiKey } from "./localization/i18n";
 
 declare global {
   interface Window {
@@ -52,16 +53,16 @@ declare global {
 }
 
 const SECTIONS = [
-  { id: "character", label: "Character", view: CharacterView },
-  { id: "tree", label: "Tree", view: TreeView },
-  { id: "ether", label: "Ether", view: EtherView },
-  { id: "skills", label: "Skills", view: SkillsView },
-  { id: "gear", label: "Gear", view: GearView },
-  { id: "merc", label: "Merc", view: MercView },
-  { id: "stats", label: "Stats", view: StatsView },
-  { id: "config", label: "Config", view: ConfigView },
-  { id: "notes", label: "Notes", view: NotesView },
-  { id: "filters", label: "Filters", view: FiltersView },
+  { id: "character", labelKey: "nav.character", view: CharacterView },
+  { id: "tree", labelKey: "nav.tree", view: TreeView },
+  { id: "ether", labelKey: "nav.ether", view: EtherView },
+  { id: "skills", labelKey: "nav.skills", view: SkillsView },
+  { id: "gear", labelKey: "nav.gear", view: GearView },
+  { id: "merc", labelKey: "nav.merc", view: MercView },
+  { id: "stats", labelKey: "nav.stats", view: StatsView },
+  { id: "config", labelKey: "nav.config", view: ConfigView },
+  { id: "notes", labelKey: "nav.notes", view: NotesView },
+  { id: "filters", labelKey: "nav.filters", view: FiltersView },
 ] as const;
 
 export type Section = (typeof SECTIONS)[number]["id"];
@@ -79,6 +80,7 @@ function readInitialSection(): Section {
 }
 
 function App() {
+  const { locale, t } = useI18n();
   const [section, setSection] = useState<Section>(readInitialSection);
   const [screen, setScreen] = useState<Screen>("library");
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -198,6 +200,10 @@ function App() {
   useEffect(() => initUndoHistory(), []);
   useEffect(() => initShiftScroll(), []);
   useEffect(() => initUiZoom(), []);
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -323,7 +329,7 @@ function App() {
                         : undefined
                     }
                   />
-                  {s.label}
+                  {t(s.labelKey as UiKey)}
                   {active && (
                     <motion.span
                       layoutId="tab-underline"

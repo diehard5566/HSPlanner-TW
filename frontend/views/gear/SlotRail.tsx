@@ -3,6 +3,7 @@ import { CornerMarks } from '../../components/ui/CornerMarks'
 import { detectRuneword, effectiveStars, getItem, getItemImage } from '@data'
 import type { EquippedItem, SlotKey } from '../../types'
 import { RARITY_BG, RARITY_BORDER, RARITY_TEXT } from './lib/rarity'
+import { useGameTranslations } from '../../localization/game'
 
 export function SlotRow({
   slot,
@@ -17,6 +18,7 @@ export function SlotRow({
   locked?: boolean
   onSelect: () => void
 }) {
+  const { game } = useGameTranslations()
   const base = equipped ? getItem(equipped.baseId) : undefined
   const runeword =
     base && equipped ? detectRuneword(base, equipped.socketed) : undefined
@@ -100,7 +102,9 @@ export function SlotRow({
             <span
               className={`block truncate text-[12px] font-semibold ${rarityText}`}
             >
-              {runeword ? runeword.name : base.name}
+          {runeword
+            ? game('item', { fallback: runeword.name })
+            : game('item', { fallback: base.name })}
             </span>
             <span className="block truncate text-[10px] text-muted">
               {runeword ? `Runeword · ${base.baseType}` : base.baseType}
@@ -171,5 +175,4 @@ export function GearPanel({
     </section>
   )
 }
-
 

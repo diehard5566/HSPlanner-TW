@@ -18,6 +18,7 @@ import { formatDecimal, formatRange, useFormatRangeInt } from './statFormat'
 import { BDLine, BDSection, HeroStat, Panel } from './statPrimitives'
 import { DamageBreakdown } from './DamageBreakdown'
 import { AttackDamageBreakdown } from './AttackDamageBreakdown'
+import { useGameTranslations } from '../../localization/game'
 
 export function MainSkillSection({
   mainSkill,
@@ -48,11 +49,12 @@ export function MainSkillSection({
   weaponDamage: WeaponDamageBreakdown | null
   attackDamage: AttackSkillDamageBreakdown | null
 }) {
+  const { game } = useGameTranslations()
   // Attack skills first: their combined numbers already include the elemental
   // part, so they are the fuller breakdown when both exist.
   if (mainSkill && attackDamage) {
     return (
-      <Panel title="Main Skill" meta={`${mainSkill.name}`}>
+      <Panel title="Main Skill" meta={game('talent', { fallback: mainSkill.name })}>
         <AttackSkillHero skill={mainSkill} breakdown={attackDamage} />
         <AttackDamageBreakdown
           skill={mainSkill}
@@ -71,7 +73,7 @@ export function MainSkillSection({
     return (
       <Panel
         title="Main Skill"
-        meta={`${mainSkill.name}`}
+        meta={game('talent', { fallback: mainSkill.name })}
       >
         <SkillDamageHero
           skill={mainSkill}
@@ -99,7 +101,7 @@ export function MainSkillSection({
         title="Main Skill"
         meta={
           mainSkill
-            ? `${mainSkill.name} · no damage`
+            ? `${game('talent', { fallback: mainSkill.name })} · no damage`
             : 'No main skill selected · weapon damage shown'
         }
       >

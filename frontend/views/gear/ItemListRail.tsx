@@ -10,6 +10,7 @@ import { useCalcResult } from '../../hooks/useCalcResult'
 import { rankSlotItemsNative } from '../../utils/calc/bridge'
 import { pickerItemsForSlot } from './pickerItems'
 import { GearItemRow } from './GearItemRow'
+import { useI18n } from '../../localization/i18n'
 
 const SORT_LABELS: Record<string, string> = {
   defense: 'Defense',
@@ -50,11 +51,12 @@ export function ItemListRail({
   dpsRankingEnabled = true,
   accepts,
 }: ItemListRailProps) {
+  const { locale, t } = useI18n()
   const [q, setQ] = useState('')
   const [sortKey, setSortKey] = useState('default')
   const rows = useMemo(
-    () => pickerItemsForSlot(slot, accepts),
-    [slot, accepts],
+    () => pickerItemsForSlot(slot, accepts, locale),
+    [slot, accepts, locale],
   )
 
   const sortOptions = useMemo<DropdownOption[]>(() => {
@@ -160,7 +162,7 @@ export function ItemListRail({
             autoFocus
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search by name, affix, or effect…"
+            placeholder={t('gear.search')}
             className="w-full rounded-md border border-border bg-bg/60 px-3 py-2 pl-9 text-[13px] text-text placeholder:text-faint focus:border-accent-deep focus:outline-none focus:ring-2 focus:ring-accent-hot/15"
           />
         </div>
@@ -189,7 +191,7 @@ export function ItemListRail({
       >
         {sortedRows.length === 0 ? (
           <div className="p-10 text-center text-[13px] text-muted">
-            No items match
+            {t('gear.noMatches')}
           </div>
         ) : (
           groupedRows.map((g, gi) => (

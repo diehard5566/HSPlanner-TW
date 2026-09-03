@@ -4,8 +4,9 @@
   "version": "1.0.6",
   "type": "module",
   "scripts": {
+    "generate:i18n": "node tools/localization/generate-localization.mjs",
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run generate:i18n && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",

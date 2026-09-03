@@ -53,9 +53,11 @@ import {
   type NodePaint,
 } from './tree/nodePaint'
 import { zoomAtPoint } from '../utils/tree/viewTransform'
+import { useI18n } from '../localization/i18n'
 import { NodeTooltip } from './tree/NodeTooltip'
 
 export default function TreeView() {
+  const { t } = useI18n()
   const allocated = useBuild((s) => s.allocatedTreeNodes)
   const toggleNode = useBuild((s) => s.toggleTreeNode)
   const resetTree = useBuild((s) => s.resetTreeNodes)
@@ -602,7 +604,7 @@ export default function TreeView() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search nodes or #id…"
+            placeholder={t('tree.search')}
             data-search-input
             data-tour="tree-search"
             className="w-64 rounded-[3px] border border-border-2 px-3 py-1.5 pl-9 pr-14 font-mono text-[11px] text-text placeholder:text-faint transition-colors focus:border-accent-deep focus:outline-none focus:ring-2 focus:ring-accent-hot/15"
@@ -621,7 +623,7 @@ export default function TreeView() {
               <button
                 onClick={() => setSearchQuery('')}
                 className="absolute right-2 top-1/2 -translate-y-1/2 rounded-[2px] px-1 font-mono text-[12px] text-faint transition-colors hover:text-accent-hot"
-                aria-label="Clear search"
+                aria-label={t('tree.clearSearch')}
               >
                 ×
               </button>

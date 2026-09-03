@@ -3,6 +3,8 @@ import { formatValue, statName } from '../../utils/item/stats'
 import type { PickerRow } from './PickerModal'
 import type { ItemBase, RangedValue, SlotKey } from '../../types'
 import { RARITY_LABEL, RARITY_ORDER } from './lib/rarity'
+import { gameSearchText, translateGameText } from '../../localization/game'
+import type { Locale } from '../../localization/locales'
 
 function midValue(v: RangedValue | undefined): number {
   if (v === undefined) return 0
@@ -28,12 +30,16 @@ function slotGroup(slotKey: SlotKey): string {
   return slotKey.replace(/_\d+$/, '')
 }
 
-function buildItemSearchTerms(i: ItemBase): string {
-  const parts: string[] = [i.name, i.baseType]
+function buildItemSearchTerms(i: ItemBase, locale: Locale): string {
+  const parts: string[] = [
+    gameSearchText(locale, 'item', { fallback: i.name }),
+    gameSearchText(locale, 'item', { fallback: i.baseType }),
+  ]
   if (i.grade) parts.push(`Grade ${i.grade}`)
   if (i.implicit) {
     for (const [k, v] of Object.entries(i.implicit)) {
-      parts.push(statName(k))
+      const canonicalStat = statName(k)
+      parts.push(gameSearchText(locale, 'attribute', { fallback: canonicalStat }))
       parts.push(formatValue(v, k))
     }
   }
@@ -59,6 +65,7 @@ function buildItemSearchTerms(i: ItemBase): string {
 export function pickerItemsForSlot(
   slotKey: SlotKey,
   accepts?: (i: ItemBase) => boolean,
+  locale: Locale = 'en',
 ): PickerRow[] {
   const group = slotGroup(slotKey)
   const matching = items
@@ -89,12 +96,12 @@ export function pickerItemsForSlot(
     }
     return {
       id: i.id,
-      name: i.name,
+      name: translateGameText(locale, 'item', { fallback: i.name }),
       rarity: i.rarity,
-      kindLabel: i.baseType,
+      kindLabel: translateGameText(locale, 'item', { fallback: i.baseType }),
       group: RARITY_LABEL[i.rarity],
       meta: parts.join(' · '),
-      searchTerms: buildItemSearchTerms(i),
+      searchTerms: buildItemSearchTerms(i, locale),
       iconUrl: getItemImage(i.id),
       sortValues: buildSortValues(i),
     }

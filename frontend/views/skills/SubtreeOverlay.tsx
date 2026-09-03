@@ -22,6 +22,7 @@ import { Modal, MODAL_BTN_CLASS } from '../../components/ui/Modal'
 import ProgressionSlider from '../../components/ProgressionSlider'
 import SubskillTooltip from './SubskillTooltip'
 import { resolveSubskillIconUrl } from './subskillSprites'
+import { useGameTranslations } from '../../localization/game'
 
 const VIEWBOX = 600
 const BOARD_MAX = 560
@@ -40,6 +41,7 @@ interface Props {
 }
 
 export default function SubtreeOverlay({ skill, onClose }: Props) {
+  const { game } = useGameTranslations()
   const level = useBuild((s) => s.level)
   const subskillRanks = useBuild((s) => s.subskillRanks)
   const incSubskillRank = useBuild((s) => s.incSubskillRank)
@@ -128,7 +130,7 @@ export default function SubtreeOverlay({ skill, onClose }: Props) {
         dataTour="subtree-overlay"
         titleId="subtree-overlay-title"
         eyebrow="Skill Subtree"
-        title={skill.name}
+        title={game('talent', { fallback: skill.name })}
         subtitle="Specialize · Boost · Change how this skill works"
         panelClassName="w-[min(680px,calc(100vw-3rem))] max-h-[calc(100vh-3rem)]"
         headerActions={

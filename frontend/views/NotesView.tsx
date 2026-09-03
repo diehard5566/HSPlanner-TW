@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useBuild } from '../store/build'
 import { isSafeUrl, sanitizeHtml } from '../utils/sanitizeHtml'
+import { useI18n } from '../localization/i18n'
 
 const PRESET_COLORS = [
   '#d4cfbf',
@@ -14,6 +15,7 @@ const PRESET_COLORS = [
 ]
 
 export default function NotesView() {
+  const { t } = useI18n()
   const notes = useBuild((s) => s.notes)
   const setNotes = useBuild((s) => s.setNotes)
   const editorRef = useRef<HTMLDivElement | null>(null)
@@ -123,13 +125,13 @@ export default function NotesView() {
             className="inline-block h-1.5 w-1.5 rotate-45 bg-accent-hot"
             style={{ boxShadow: '0 0 8px rgba(224,184,100,0.6)' }}
           />
-          Journal
+          {t('notes.journal')}
         </div>
         <h2
           className="m-0 text-[22px] font-semibold tracking-[0.02em] text-accent-hot"
           style={{ textShadow: '0 0 16px rgba(224,184,100,0.18)' }}
         >
-          Notes
+          {t('nav.notes')}
         </h2>
       </header>
       <div className="flex flex-wrap items-center gap-1 rounded-md border border-border bg-panel p-2">
@@ -231,13 +233,13 @@ export default function NotesView() {
             className="rounded-[3px] border border-accent-deep px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-accent-hot transition-colors hover:border-accent-hot hover:text-[#fff0c4]"
             style={{ background: 'linear-gradient(180deg, #3a2f1a, #2a2418)' }}
           >
-            Insert
+            {t('notes.insert')}
           </button>
           <button
             onClick={() => setLinkOpen(false)}
             className="rounded-[3px] border border-border-2 bg-panel-2 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted transition-colors hover:border-accent-deep hover:text-accent-hot"
           >
-            Cancel
+            {t('common.cancel')}
           </button>
         </div>
       )}
@@ -256,8 +258,7 @@ export default function NotesView() {
       />
 
       <div className="text-[10px] text-muted">
-        Auto-saves on change · committed to disk on focus loss. Notes are
-        shared across all profiles in this build.
+        {t('notes.autoSave')}
       </div>
     </div>
   )

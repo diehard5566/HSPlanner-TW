@@ -25,6 +25,7 @@ import {
   formatPctRange,
   formatStatPair,
 } from './skillFormat'
+import { useGameTranslations } from '../../localization/game'
 
 export function DetailBlock({
   title,
@@ -96,6 +97,7 @@ export function SubtreeBonusBlock({
   subskillRanks: Record<string, number>
   enemyConditions: Record<string, boolean>
 }) {
+  const { game } = useGameTranslations()
   const agg = useCalcResult<SubtreeAggregation>(
     () =>
       subskillAggregationNative(
@@ -175,7 +177,7 @@ export function SubtreeBonusBlock({
             return (
               <div key={sub.id} className="text-[12px]">
                 <div className="flex items-baseline justify-between gap-2">
-                  <span className="text-text">{sub.name}</span>
+                  <span className="text-text">{game('subTalent', { fallback: sub.name })}</span>
                   <span className="tabular-nums">
                     <span className="text-accent-hot">{chance}%</span>{' '}
                     <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">

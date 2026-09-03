@@ -18,8 +18,12 @@ import {
   tagSkillBonuses,
 } from '../utils/skills/skillTags'
 import { SkillDetailsPanel, EmptyState } from './skills/SkillDetailsPanel'
+import { useI18n } from '../localization/i18n'
+import { useGameTranslations } from '../localization/game'
 
 export default function SkillsView() {
+  const { t } = useI18n()
+  const { game } = useGameTranslations()
   const classId = useBuild((s) => s.classId)
   const level = useBuild((s) => s.level)
   const skillRanks = useBuild((s) => s.skillRanks)
@@ -135,13 +139,13 @@ export default function SkillsView() {
 
   if (classes.length === 0) {
     return (
-      <EmptyState message="No classes loaded. Add a file in src/data/classes/." />
+      <EmptyState message={t('skills.noClasses')} />
     )
   }
   if (skillsForClass.length === 0) {
     return (
       <EmptyState
-        message={`No skills defined for ${cls?.name ?? 'this class'}. Add JSON in src/data/skills/.`}
+        message={t('skills.noSkills', { className: cls?.name ?? 'this class' })}
       />
     )
   }
@@ -162,17 +166,17 @@ export default function SkillsView() {
             style={{ boxShadow: '0 0 8px rgba(224,184,100,0.6)' }}
           />
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
-            Skills
+            {t('skills.title')}
           </span>
           <span
             className="text-[15px] font-semibold tracking-[0.02em] text-accent-hot"
             style={{ textShadow: '0 0 14px rgba(224,184,100,0.18)' }}
           >
-            {cls?.name}
+            {cls ? game('main', { fallback: cls.name }) : null}
           </span>
         </div>
         <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.14em]">
-          <span className="text-faint">Points</span>
+          <span className="text-faint">{t('common.points')}</span>
           <span
             className={`tabular-nums ${remaining > 0 ? 'text-accent-hot' : 'text-muted'}`}
             style={
@@ -186,16 +190,16 @@ export default function SkillsView() {
           <span className="text-faint">/ {totalPoints}</span>
           <span aria-hidden className="h-3 w-px bg-border" />
           <span className={remaining > 0 ? 'text-accent-hot' : 'text-faint'}>
-            {remaining} available
+            {t('skills.available', { count: remaining })}
           </span>
           <span aria-hidden className="h-3 w-px bg-border" />
-          <span className="text-faint">Shift ×5 · Ctrl/Cmd+Shift all</span>
+          <span className="text-faint">{t('skills.controlsHint')}</span>
           <button
             onClick={resetSkillRanks}
             disabled={spent === 0}
             className="rounded-[3px] border border-border-2 bg-transparent px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted transition-colors hover:border-stat-red hover:text-stat-red disabled:cursor-not-allowed disabled:opacity-40"
           >
-            Reset
+            {t('common.reset')}
           </button>
         </div>
       </header>
@@ -207,7 +211,7 @@ export default function SkillsView() {
               {trees.map((tree) => (
                 <SkillTree
                   key={tree.name}
-                  name={tree.name}
+                  name={game('talent', { fallback: tree.name })}
                   list={tree.list}
                   skillRanks={visibleRanks}
                   skillBonuses={skillBonuses}

@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { NUMBER_SCALES, type NumberScale } from '../utils/compactNumber'
 import { readStorage, writeStorage } from '../utils/storage'
 import { applyUiZoom, detectUiZoom, isUiZoom, type UiZoom } from '../utils/uiZoom'
+import { isLocale, type Locale } from '../localization/locales'
 
 const SETTINGS_KEY = 'hsplanner.settings.v1'
 
@@ -10,6 +11,7 @@ interface SettingsValues {
   numberScale: NumberScale
   extraCharmSlot: boolean
   uiZoom: UiZoom
+  locale: Locale
 }
 
 interface SettingsState extends SettingsValues {
@@ -17,6 +19,7 @@ interface SettingsState extends SettingsValues {
   setNumberScale: (numberScale: NumberScale) => void
   setExtraCharmSlot: (extraCharmSlot: boolean) => void
   setUiZoom: (uiZoom: UiZoom) => void
+  setLocale: (locale: Locale) => void
 }
 
 const DEFAULTS: SettingsValues = {
@@ -24,6 +27,7 @@ const DEFAULTS: SettingsValues = {
   numberScale: 'billions',
   extraCharmSlot: true,
   uiZoom: 1,
+  locale: 'en',
 }
 
 function loadSettings(): SettingsValues {
@@ -46,6 +50,7 @@ function loadSettings(): SettingsValues {
           ? o.extraCharmSlot
           : DEFAULTS.extraCharmSlot,
       uiZoom: isUiZoom(o.uiZoom) ? o.uiZoom : DEFAULTS.uiZoom,
+      locale: isLocale(o.locale) ? o.locale : DEFAULTS.locale,
     }
   } catch {
     return DEFAULTS
@@ -60,6 +65,7 @@ function persist(values: SettingsValues): void {
       numberScale: values.numberScale,
       extraCharmSlot: values.extraCharmSlot,
       uiZoom: values.uiZoom,
+      locale: values.locale,
     }),
   )
 }
@@ -82,6 +88,10 @@ export const useSettings = create<SettingsState>((set, get) => ({
     set({ uiZoom })
     persist(get())
     applyUiZoom(uiZoom)
+  },
+  setLocale: (locale) => {
+    set({ locale })
+    persist(get())
   },
 }))
 

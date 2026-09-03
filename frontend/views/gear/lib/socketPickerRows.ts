@@ -3,18 +3,21 @@ import { gems, runes } from '@data'
 import { fmtStats } from '../../../utils/item/stats'
 import { gemColorForName, socketableIconForName } from './gearIcons'
 import { buildSocketableTooltip } from '../tooltips'
+import { translateGameText } from '../../../localization/game'
+import type { Locale } from '../../../localization/locales'
 
-let cache: PickerRow[] | null = null
+const cache = new Map<Locale, PickerRow[]>()
 
-export function getSocketPickerRows(): PickerRow[] {
-  if (cache) return cache
+export function getSocketPickerRows(locale: Locale = 'en'): PickerRow[] {
+  const cached = cache.get(locale)
+  if (cached) return cached
   const out: PickerRow[] = []
   for (const g of gems) {
     const isJewel = g.name.toLowerCase().includes('jewel')
     const kind = isJewel ? 'JEWEL' : 'GEM'
     out.push({
       id: g.id,
-      name: g.name,
+      name: translateGameText(locale, 'item', { fallback: g.name }),
       tier: g.tier,
       kindLabel: kind,
       group: isJewel ? 'Jewels' : 'Gems',
@@ -27,7 +30,7 @@ export function getSocketPickerRows(): PickerRow[] {
   for (const r of runes) {
     out.push({
       id: r.id,
-      name: r.name,
+      name: translateGameText(locale, 'item', { fallback: r.name }),
       tier: r.tier,
       kindLabel: 'RUNE',
       group: 'Runes',
@@ -37,6 +40,6 @@ export function getSocketPickerRows(): PickerRow[] {
       tooltip: buildSocketableTooltip(r, 'RUNE'),
     })
   }
-  cache = out
+  cache.set(locale, out)
   return out
 }

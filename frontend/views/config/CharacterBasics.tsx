@@ -4,8 +4,10 @@ import { Panel } from './configPrimitives'
 import { classes, gameConfig, getClass } from '@data'
 import { attrPointsFor, finalAttributes, useBuild } from '../../store/build'
 import { allocationStep } from '../../utils/allocationStep'
+import { useGameTranslations } from '../../localization/game'
 
 export default function CharacterBasics() {
+  const { game } = useGameTranslations()
   const classId = useBuild((s) => s.classId)
   const level = useBuild((s) => s.level)
   const allocated = useBuild((s) => s.allocated)
@@ -39,14 +41,18 @@ export default function CharacterBasics() {
               onChange={(id) => {
                 if (id) setClass(id)
               }}
-              options={classes.map((c) => ({ id: c.id, label: c.name }))}
+              options={classes.map((c) => ({
+                id: c.id,
+                label: game('main', { fallback: c.name }),
+                searchTerms: c.name,
+              }))}
               placeholder="Select a class…"
               searchPlaceholder="Search class…"
             />
           )}
           {cls?.description && (
             <p className="mt-3 text-[12px] leading-relaxed text-muted">
-              {cls.description}
+              {game('main', { fallback: cls.description })}
             </p>
           )}
         </Panel>
@@ -137,7 +143,7 @@ export default function CharacterBasics() {
                     <span
                       className={`block truncate text-sm font-medium ${added > 0 ? 'text-accent-hot' : 'text-text'}`}
                     >
-                      {attr.name}
+                      {game('attribute', { fallback: attr.name })}
                     </span>
                     <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
                       Base {base}
@@ -216,4 +222,3 @@ function PanelInputWrap({ children }: { children: ReactNode }) {
     </div>
   )
 }
-

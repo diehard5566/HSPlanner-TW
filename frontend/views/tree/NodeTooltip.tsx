@@ -17,6 +17,8 @@ import { TONE_BORDER, TONE_GLOW } from '../../components/tooltipTones'
 import type { TreeNodeInfo } from '../../utils/tree/treeStats'
 import { tierLabel, tierTone, type TreeNode } from './treeData'
 import { JewelrySocketSection } from './JewelrySocketSection'
+import { useI18n } from '../../localization/i18n'
+import { useGameTranslations } from '../../localization/game'
 
 export function NodeTooltip({
   node,
@@ -45,10 +47,12 @@ export function NodeTooltip({
   previewAddedCount: number
   previewRemovedCount: number
 }) {
+  const { locale, t } = useI18n()
+  const { game } = useGameTranslations()
   const ref = useRef<HTMLDivElement>(null)
   const [pos, setPos] = useState<{ left: number; top: number } | null>(null)
   const tone = tierTone(info?.n, node.tier)
-  const tierName = tierLabel(info?.n, node.tier)
+  const tierName = tierLabel(info?.n, node.tier, locale)
   const lineGroups = info ? classification : null
 
   const singleDpsDiffs = useMemo(
@@ -153,7 +157,7 @@ export function NodeTooltip({
       }}
     >
       <TooltipHeader
-        title={info?.t ?? `Node #${node.id}`}
+        title={info ? game('ether', { fallback: info.t }) : `Node #${node.id}`}
         subtitle={tierName}
         tone={tone}
       />
@@ -168,7 +172,7 @@ export function NodeTooltip({
             <TooltipSection>
               <div className="space-y-0.5">
                 {lineGroups.parsed.map((line, i) => (
-                  <TooltipText key={i}>{line}</TooltipText>
+                  <TooltipText key={i}>{game('ether', { fallback: line })}</TooltipText>
                 ))}
               </div>
             </TooltipSection>
@@ -181,14 +185,14 @@ export function NodeTooltip({
           {info?.note && (
             <TooltipSection>
               <div className="text-[12px] leading-[1.55] text-accent-hot italic">
-                {info.note}
+                {game('ether', { fallback: info.note })}
               </div>
             </TooltipSection>
           )}
           {netChangeVisible && (
             <TooltipSection>
               <div className="mb-2 flex items-center gap-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
-                <span>Net Change</span>
+                <span>{t('tree.netChange')}</span>
                 <span className="h-px flex-1 bg-border" />
                 {isAllocated && previewRemovedCount > 1 && (
                   <span className="font-normal tracking-[0.14em] text-faint">
@@ -204,7 +208,7 @@ export function NodeTooltip({
               {singleHasContent && (
                 <div className={pathDiffersFromSingle ? 'mb-3' : undefined}>
                   <div className="mb-1 flex items-baseline gap-2 font-mono text-[9px] uppercase tracking-[0.16em] text-faint">
-                    <span className="text-accent-deep">This Node</span>
+                    <span className="text-accent-deep">{t('tree.thisNode')}</span>
                     {pathDiffersFromSingle && (
                       <span className="text-faint/70 normal-case">— hovered alone</span>
                     )}

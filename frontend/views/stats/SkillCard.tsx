@@ -25,6 +25,7 @@ import type {
 import { formatDecimal, formatRange, useFormatRangeInt } from './statFormat'
 import { DamageBreakdown } from './DamageBreakdown'
 import { AttackDamageBreakdown } from './AttackDamageBreakdown'
+import { useGameTranslations } from '../../localization/game'
 
 export function SkillCard({
   skill,
@@ -59,6 +60,7 @@ export function SkillCard({
   isMain: boolean
   weapon?: NativeWeaponRef
 }) {
+  const { game } = useGameTranslations()
   const formatRangeInt = useFormatRangeInt()
   const subskillRanks = useBuild((s) => s.subskillRanks)
   const entityRates = useBuild((s) => s.entityRates)
@@ -211,7 +213,7 @@ export function SkillCard({
       )}
       <div className="flex items-baseline justify-between gap-2">
         <div className="font-medium text-text">
-          {skill.name}{' '}
+          {game('talent', { fallback: skill.name })}{' '}
           <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
             rank{' '}
             <span className={learned ? 'text-accent-hot' : 'text-faint'}>

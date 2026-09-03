@@ -12,8 +12,12 @@ import { EquipmentDoll } from './EquipmentDoll'
 import { GearSlotModal } from './GearSlotModal'
 import { StashSection } from './StashSection'
 import { UpgradeAdvisor } from './UpgradeAdvisor'
+import { useI18n } from '../../localization/i18n'
+import { useGameTranslations } from '../../localization/game'
 
 export default function GearView() {
+  const { locale, t } = useI18n()
+  const { game } = useGameTranslations()
   const inventory = useBuild((s) => s.inventory)
   const commitEquippedItem = useBuild((s) => s.commitEquippedItem)
   const allocatedTreeNodes = useBuild((s) => s.allocatedTreeNodes)
@@ -43,7 +47,7 @@ export default function GearView() {
     return !(candidateOverflowed || overflowGrew)
   }
 
-  const socketPickerRows: PickerRow[] = getSocketPickerRows()
+  const socketPickerRows: PickerRow[] = getSocketPickerRows(locale)
 
   const charmSlots = gameConfig.slots.filter((s) => s.key.startsWith('charm_'))
 
@@ -64,14 +68,14 @@ export default function GearView() {
             className="inline-block h-1.5 w-1.5 rotate-45 bg-accent-hot"
             style={{ boxShadow: '0 0 8px rgba(224,184,100,0.6)' }}
           />
-          Loadout
+          {t('nav.gear')}
         </div>
         <div className="flex items-end justify-between gap-3">
           <h2
             className="m-0 text-[22px] font-semibold tracking-[0.02em] text-accent-hot"
             style={{ textShadow: '0 0 16px rgba(224,184,100,0.18)' }}
           >
-            Gear
+            {t('nav.gear')}
           </h2>
           <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
             <span>
@@ -113,7 +117,10 @@ export default function GearView() {
         <GearSlotModal
           slot={activeSlot}
           slotName={
-            gameConfig.slots.find((s) => s.key === activeSlot)?.name ?? activeSlot
+            game(
+              'item',
+              { fallback: gameConfig.slots.find((s) => s.key === activeSlot)?.name ?? activeSlot },
+            )
           }
           equipped={inventory[activeSlot]}
           offhandLocked={offhandLocked}

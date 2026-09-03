@@ -1,5 +1,8 @@
 import { etherTree } from '@data'
 import type { EtherNode, EtherNodeType } from '../../types'
+import { translateGameText } from '../../localization/game'
+import { translateUi } from '../../localization/i18n'
+import type { Locale } from '../../localization/locales'
 
 export const ETHER_NODES: EtherNode[] = etherTree.nodes
 export const ETHER_EDGES: [number, number][] = etherTree.edges
@@ -35,14 +38,19 @@ export const ETHER_SEARCH_INDEX: { id: number; haystack: string }[] =
     const stat = etherTree.stats[n.key]
     return {
       id: n.id,
-      haystack: `${stat?.label ?? ''} ${stat?.desc ?? ''}`.toLowerCase(),
+      haystack: [
+        stat?.label ?? '',
+        stat?.desc ?? '',
+        translateGameText('zh-TW', 'ether', { fallback: stat?.label ?? '' }),
+        translateGameText('zh-TW', 'ether', { fallback: stat?.desc ?? '' }),
+      ].join(' ').toLowerCase(),
     }
   })
 
-export function etherTypeLabel(t: EtherNodeType): string {
-  if (t === 'root') return 'Starting Node'
-  if (t === 'big') return 'Notable'
-  return 'Minor'
+export function etherTypeLabel(t: EtherNodeType, locale: Locale = 'en'): string {
+  if (t === 'root') return translateUi(locale, 'tree.startingNode')
+  if (t === 'big') return translateUi(locale, 'tree.notable')
+  return translateUi(locale, 'tree.minor')
 }
 
 export interface EtherNodePaint {

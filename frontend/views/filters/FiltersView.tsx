@@ -29,6 +29,7 @@ import { FilterEditor } from './FilterEditor'
 import { FILTER_BTN_CLASS, FILTER_BTN_PRIMARY_CLASS } from './FilterCells'
 import { filterSummary, type FilterSummary } from './filterModel'
 import { GenerateFromBuildModal } from './GenerateFromBuildModal'
+import { useI18n } from '../../localization/i18n'
 
 const GRID = 'grid-cols-[28px_minmax(0,1fr)_150px_150px]'
 
@@ -38,6 +39,7 @@ export default function FiltersView() {
 }
 
 function BuildFilters({ activeBuildId }: { activeBuildId: string | null }) {
+  const { t } = useI18n()
   const [filters, setFilters] = useState<SavedLootFilter[]>(() =>
     activeBuildId ? listSavedFilters(activeBuildId) : [],
   )
@@ -87,7 +89,7 @@ function BuildFilters({ activeBuildId }: { activeBuildId: string | null }) {
           className="m-0 text-[22px] font-semibold tracking-[0.02em] text-accent-hot"
           style={{ textShadow: '0 0 16px rgba(224,184,100,0.18)' }}
         >
-          Loot Filters
+          {t('filters.title')}
         </h2>
       </div>
       {activeBuildId && (
@@ -98,14 +100,14 @@ function BuildFilters({ activeBuildId }: { activeBuildId: string | null }) {
             onClick={() => setGenerateOpen(true)}
             className={FILTER_BTN_CLASS}
           >
-            From build
+            {t('filters.fromBuild')}
           </button>
           <button
             type="button"
             onClick={() => setNewFilterCode('')}
             className={FILTER_BTN_PRIMARY_CLASS}
           >
-            + New filter
+            {t('filters.newAction')}
           </button>
         </div>
       )}
@@ -154,18 +156,18 @@ function BuildFilters({ activeBuildId }: { activeBuildId: string | null }) {
           style={{ background: 'rgba(255,255,255,0.008)' }}
         >
           <span>★</span>
-          <span>Name</span>
-          <span>Modified</span>
+          <span>{t('common.name')}</span>
+          <span>{t('common.modified')}</span>
           <span aria-hidden />
         </div>
 
         {filters.length === 0 ? (
           <div className="flex flex-col items-center gap-1.5 px-6 py-12 text-center">
             <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
-              No loot filters yet
+              {t('filters.empty')}
             </div>
             <div className="text-[11px] text-muted">
-              Create a new filter or import an export string from the game.
+              {t('filters.emptyHelp')}
             </div>
           </div>
         ) : (
@@ -495,6 +497,7 @@ function NewFilterModal({
   onClose: () => void
   onDone: (record: SavedLootFilter) => void
 }) {
+  const { t } = useI18n()
   const [name, setName] = useState('New filter')
   const [code, setCode] = useState(initialCode)
   const [error, setError] = useState<string | null>(null)
@@ -518,12 +521,12 @@ function NewFilterModal({
       onClose={onClose}
       panelClassName="w-[min(560px,92vw)]"
       eyebrow="Loot filter"
-      title="New loot filter"
+      title={t('filters.new')}
     >
       <div className="flex flex-col gap-3 px-6 py-4">
         <label className="flex flex-col gap-1">
           <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-faint">
-            Name
+            {t('common.name')}
           </span>
           <input
             value={name}
@@ -538,7 +541,7 @@ function NewFilterModal({
         </label>
         <label className="flex flex-col gap-1">
           <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-faint">
-            Export string · optional
+            {t('filters.exportOptional')}
           </span>
           <textarea
             value={code}
@@ -548,7 +551,7 @@ function NewFilterModal({
             }}
             spellCheck={false}
             rows={5}
-            placeholder="Leave empty to start from scratch, or paste an export from the game (eyJ2ZXJzaW9uIjoy…)"
+            placeholder={t('filters.newPlaceholder')}
             className="resize-y rounded-[3px] border border-border-2 bg-panel-2 p-2 font-mono text-[10px] leading-relaxed text-muted outline-none transition-colors focus:border-accent-deep"
           />
         </label>
@@ -556,7 +559,7 @@ function NewFilterModal({
       </div>
       <div className="flex items-center justify-end gap-2 border-t border-border px-6 py-3">
         <button type="button" onClick={submit} className={MODAL_BTN_PRIMARY_CLASS}>
-          {hasCode ? 'Import from game' : 'Create'}
+          {hasCode ? t('filters.importGame') : t('filters.create')}
         </button>
       </div>
     </Modal>

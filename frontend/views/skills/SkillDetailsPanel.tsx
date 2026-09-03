@@ -20,6 +20,8 @@ import {
   SubtreeBonusBlock,
 } from './SkillEffectsBlock'
 import { formatPair, formatStatPair } from './skillFormat'
+import { useI18n } from '../../localization/i18n'
+import { useGameTranslations } from '../../localization/game'
 
 export function SkillDetailsPanel({
   skill,
@@ -56,6 +58,8 @@ export function SkillDetailsPanel({
   onToggleActive: (id: string) => void
   buffingAuraEffectiveness: RangedValue
 }) {
+  const { t } = useI18n()
+  const { game } = useGameTranslations()
   if (!skill) {
     return (
       <aside
@@ -73,11 +77,10 @@ export function SkillDetailsPanel({
               className="inline-block h-1 w-1 rotate-45 bg-accent-hot"
               style={{ boxShadow: '0 0 6px rgba(224,184,100,0.5)' }}
             />
-            Details
+            {t('common.details')}
           </div>
           <p className="font-mono text-[11px] leading-relaxed tracking-[0.04em] text-muted">
-            Click a skill to inspect its damage, mana cost, synergies, and
-            subtree bonuses.
+            {t('skills.detailsHelp')}
           </p>
         </div>
 
@@ -87,15 +90,15 @@ export function SkillDetailsPanel({
               aria-hidden
               className="inline-block h-1 w-1 rotate-45 bg-accent-deep"
             />
-            Controls
+            {t('skills.controls')}
           </div>
           <ul className="space-y-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-            <ControlsRow keys="L-CLICK" label="Select skill" />
-            <ControlsRow keys="+" label="Add a point" />
-            <ControlsRow keys="R-CLICK" label="Remove a point" />
-            <ControlsRow keys="SHIFT" label="5 points at a time" />
-            <ControlsRow keys="CTRL/CMD+SHIFT" label="All the points" />
-            <ControlsRow keys={<GearIcon className="h-3 w-3" />} label="Open subtree" />
+            <ControlsRow keys="L-CLICK" label={t('skills.select')} />
+            <ControlsRow keys="+" label={t('skills.addPoint')} />
+            <ControlsRow keys="R-CLICK" label={t('skills.removePoint')} />
+            <ControlsRow keys="SHIFT" label={t('skills.fivePoints')} />
+            <ControlsRow keys="CTRL/CMD+SHIFT" label={t('skills.allPoints')} />
+            <ControlsRow keys={<GearIcon className="h-3 w-3" />} label={t('skills.openSubtree')} />
           </ul>
         </div>
 
@@ -105,7 +108,7 @@ export function SkillDetailsPanel({
               aria-hidden
               className="inline-block h-1 w-1 rotate-45 bg-accent-deep"
             />
-            Damage Types
+            {t('skills.damageTypes')}
           </div>
           <ul className="grid grid-cols-2 gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
             <DamageLegend type="physical" />
@@ -167,7 +170,7 @@ export function SkillDetailsPanel({
             className="truncate text-[15px] font-semibold tracking-[0.02em] text-accent-hot"
             style={{ textShadow: '0 0 12px rgba(224,184,100,0.18)' }}
           >
-            {skill.name}
+            {game('talent', { fallback: skill.name })}
           </div>
           <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
             {skill.damageType ?? '—'} · {skill.kind}
@@ -188,13 +191,13 @@ export function SkillDetailsPanel({
                 : undefined
             }
           >
-            {isActive ? '✓ Active' : '+ Active'}
+            {t(isActive ? 'skills.activeMarked' : 'skills.makeActive')}
           </button>
         )}
       </div>
       <div className="mb-3 flex items-center gap-2 font-mono text-[12px] tabular-nums">
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
-          Rank
+          {t('common.rank')}
         </span>
         <span className="text-accent-hot">
           {hasBonus ? effLabel : currentRank}
@@ -214,12 +217,12 @@ export function SkillDetailsPanel({
       </div>
       {(tagView.tags.length > 0 || tagView.removed.length > 0) && (
         <div className="mb-3 flex flex-wrap gap-1.5">
-          {tagView.tags.map((t) => (
+          {tagView.tags.map((tag) => (
             <span
-              key={t}
-              title={tagView.added.has(t) ? 'Added by subskill' : undefined}
+              key={tag}
+              title={tagView.added.has(tag) ? t('skills.addedBySubskill') : undefined}
               className={`rounded-[3px] border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-accent-hot/80 ${
-                tagView.added.has(t)
+                tagView.added.has(tag)
                   ? 'border-accent-hot/80'
                   : 'border-accent-deep/40'
               }`}
@@ -228,22 +231,22 @@ export function SkillDetailsPanel({
                   'linear-gradient(180deg, rgba(58,46,24,0.5), rgba(42,36,24,0.3))',
               }}
             >
-              {t}
+              {tag}
             </span>
           ))}
-          {tagView.removed.map((t) => (
+          {tagView.removed.map((tag) => (
             <span
-              key={t}
-              title="Removed by subskill"
+              key={tag}
+              title={t('skills.removedBySubskill')}
               className="rounded-[3px] border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-faint line-through opacity-60"
             >
-              {t}
+              {tag}
             </span>
           ))}
         </div>
       )}
       {(hasBonus || hasAuraBonus) && (
-        <DetailBlock title="Skill bonuses">
+        <DetailBlock title={t('skills.bonuses')}>
           <div className="space-y-1 text-[12px] tabular-nums">
             {hasBonus && (
               <>
@@ -277,7 +280,7 @@ export function SkillDetailsPanel({
                 ))}
                 {(itemBonus[0] !== 0 || itemBonus[1] !== 0) && (
                   <div className="flex justify-between">
-                    <span className="text-muted">+ to {skill.name}</span>
+                    <span className="text-muted">+ to {game('talent', { fallback: skill.name })}</span>
                     <span className="text-accent-hot">
                       +{formatPair(itemBonus)}
                     </span>
@@ -319,7 +322,7 @@ export function SkillDetailsPanel({
       />
       {skill.description && (
         <p className="mb-3 text-[12px] leading-relaxed text-muted">
-          {skill.description}
+          {game('talent', { fallback: skill.description })}
         </p>
       )}
     </aside>

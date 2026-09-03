@@ -29,6 +29,7 @@ describe('settings store', () => {
       numberScale: 'millions',
       extraCharmSlot: true,
       uiZoom: 1,
+      locale: 'en',
     })
   })
 
@@ -49,6 +50,18 @@ describe('settings store', () => {
     const useSettings = await freshStore()
     expect(useSettings.getState().autoSave).toBe(false)
     expect(useSettings.getState().numberScale).toBe('billions')
+    expect(useSettings.getState().locale).toBe('en')
+  })
+
+  it('persists a supported locale and rejects an unknown stored locale', async () => {
+    let useSettings = await freshStore()
+    useSettings.getState().setLocale('zh-TW')
+    useSettings = await freshStore()
+    expect(useSettings.getState().locale).toBe('zh-TW')
+
+    window.localStorage.setItem(SETTINGS_KEY, JSON.stringify({ locale: 'zh-CN' }))
+    useSettings = await freshStore()
+    expect(useSettings.getState().locale).toBe('en')
   })
 
   it('falls back to defaults on corrupted or invalid stored values', async () => {

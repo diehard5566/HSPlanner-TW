@@ -1,6 +1,9 @@
 import { incarnationTree } from '@data'
 import { TREE_JEWELRY_IDS, TREE_NODE_INFO } from '../../utils/tree/treeStats'
 import type { TooltipTone } from '../../components/tooltipTones'
+import { translateGameText } from '../../localization/game'
+import { translateUi } from '../../localization/i18n'
+import type { Locale } from '../../localization/locales'
 
 export interface TreeNode {
   id: number
@@ -24,13 +27,14 @@ export function tierTone(
 export function tierLabel(
   nodeType: string | undefined,
   tier: TreeNode['tier'],
+  locale: Locale = 'en',
 ): string {
-  if (nodeType === 'jewelry') return 'Jewelry Socket'
-  if (nodeType === 'warp') return 'Warp Node'
-  if (nodeType === 'root') return 'Starting Node'
-  if (nodeType === 'big') return 'Notable'
-  if (tier === 'keystone') return 'Keystone'
-  return 'Minor'
+  if (nodeType === 'jewelry') return translateUi(locale, 'tree.jewelrySocket')
+  if (nodeType === 'warp') return translateUi(locale, 'tree.warpNode')
+  if (nodeType === 'root') return translateUi(locale, 'tree.startingNode')
+  if (nodeType === 'big') return translateUi(locale, 'tree.notable')
+  if (tier === 'keystone') return translateUi(locale, 'tree.keystone')
+  return translateUi(locale, 'tree.minor')
 }
 
 export function classifyTier(r: number): TreeNode['tier'] {
@@ -56,7 +60,14 @@ export const SEARCH_INDEX: { id: number; haystack: string }[] = Object.entries(
   TREE_NODE_INFO,
 ).map(([id, info]) => ({
   id: Number(id),
-  haystack: [info.t, ...info.l, info.note ?? ''].join(' ').toLowerCase(),
+  haystack: [
+    info.t,
+    ...info.l,
+    info.note ?? '',
+    translateGameText('zh-TW', 'ether', { fallback: info.t }),
+    ...info.l.map((line) => translateGameText('zh-TW', 'ether', { fallback: line })),
+    translateGameText('zh-TW', 'ether', { fallback: info.note ?? '' }),
+  ].join(' ').toLowerCase(),
 }))
 
 const NODE_ICON_FILES = import.meta.glob<string>(

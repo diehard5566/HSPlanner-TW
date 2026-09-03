@@ -27,6 +27,7 @@ import type { BuildPerformance } from '../utils/build/buildPerformance'
 import { effectiveCap, formatValue, isZero, rangedMax } from '../utils/item/stats'
 import { isImageUrl } from '../utils/imageUrl'
 import type { RangedValue } from '../types'
+import { useGameTranslations } from '../localization/game'
 
 const ATTRIBUTE_ORDER = [
   'strength',
@@ -89,6 +90,7 @@ interface LoadoutEntry {
 }
 
 export default function CharacterView() {
+  const { game } = useGameTranslations()
   const classId = useBuild((s) => s.classId)
   const level = useBuild((s) => s.level)
   const allocated = useBuild((s) => s.allocated)
@@ -307,7 +309,7 @@ export default function CharacterView() {
               {buildName ?? 'Unsaved build'}
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-              <span>{cls?.name ?? 'No class'}</span>
+              <span>{cls ? game('main', { fallback: cls.name }) : 'No class'}</span>
               <span className="text-faint">·</span>
               <span>Lv {level}</span>
               <span className="text-faint">·</span>
@@ -365,7 +367,7 @@ export default function CharacterView() {
                   className={`inline-block h-1 w-1 rotate-45 ${color}`}
                   style={{ backgroundColor: 'currentColor' }}
                 />
-                {attr.name}
+                {game('attribute', { fallback: attr.name })}
               </div>
               <div
                 className={`mt-1 font-mono text-[26px] font-semibold tabular-nums ${color}`}
@@ -558,6 +560,7 @@ function LoadoutCard({
   entries: LoadoutEntry[]
   empty: string
 }) {
+  const { gameAny } = useGameTranslations()
   return (
     <Card>
       <SectionHead
@@ -587,7 +590,7 @@ function LoadoutCard({
               <SkillIconImage icon={e.icon} size={32} className="text-2xl" />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-[13px] font-medium text-text">
-                  {e.name}
+                  {gameAny(e.name)}
                 </span>
                 <span className="block truncate font-mono text-[10px] uppercase tracking-[0.16em] text-accent-deep">
                   {e.sub}

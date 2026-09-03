@@ -13,6 +13,8 @@ import {
   SYNERGY_RGB,
   treeColorRgb,
 } from './treeConstants'
+import { useI18n } from '../../localization/i18n'
+import { useGameTranslations } from '../../localization/game'
 
 export function GearIcon({ className }: { className?: string }) {
   return (
@@ -54,6 +56,7 @@ export function SkillTree({
   onDec: (id: string, e: React.MouseEvent) => void
   onOpenSubtree: (id: string | null) => void
 }) {
+  const { t } = useI18n()
   const rgb = treeColorRgb(list)
   const pts = list.reduce((a, s) => a + (skillRanks[s.id] ?? 0), 0)
   const maxRow = list.reduce((m, s) => Math.max(m, s.position?.row ?? 0), 0)
@@ -104,7 +107,7 @@ export function SkillTree({
           </h3>
         </div>
         <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint tabular-nums">
-          {pts} pts
+          {t('skills.treePoints', { count: pts })}
         </span>
       </div>
       <motion.div
@@ -221,6 +224,9 @@ function SkillIcon({
   onDec: (e: React.MouseEvent) => void
   onOpenSubtree: () => void
 }) {
+  const { t } = useI18n()
+  const { game } = useGameTranslations()
+  const displayName = game('talent', { fallback: skill.name })
   const allocated = rank > 0
   const canInc = canIncrement && rank < skill.maxRank && !locked
   const dmgRgb = skill.damageType
@@ -308,7 +314,7 @@ function SkillIcon({
             background: 'linear-gradient(180deg, #3a2f1a, #2a2418)',
             boxShadow: '0 0 8px rgba(224,184,100,0.35)',
           }}
-          aria-label={`Add point to ${skill.name}`}
+          aria-label={`${t('skills.addPoint')}: ${displayName}`}
         >
           +
         </button>
@@ -326,8 +332,8 @@ function SkillIcon({
           className="absolute -bottom-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-xs border border-border-2 bg-panel text-[10px] text-muted transition-colors hover:border-accent-deep hover:text-accent-hot"
           style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
           data-tour="subtree-button"
-          aria-label={`Open ${skill.name} subtree`}
-          title="Open subtree"
+          aria-label={`${t('skills.openSubtree')}: ${displayName}`}
+          title={t('skills.openSubtree')}
         >
           <GearIcon className="h-3 w-3" />
         </button>

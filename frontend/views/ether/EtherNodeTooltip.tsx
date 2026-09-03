@@ -17,6 +17,8 @@ import {
   parseEtherValue,
 } from '../../utils/build/etherSummary'
 import { etherTypeLabel } from './etherData'
+import { useI18n } from '../../localization/i18n'
+import { useGameTranslations } from '../../localization/game'
 
 function etherTone(t: EtherNode['t']): TooltipTone {
   if (t === 'root') return 'angelic'
@@ -41,6 +43,8 @@ export function EtherNodeTooltip({
   previewAddedCount,
   previewRemovedCount,
 }: Props) {
+  const { locale, t } = useI18n()
+  const { game } = useGameTranslations()
   const ref = useRef<HTMLDivElement>(null)
   const [pos, setPos] = useState<{ left: number; top: number } | null>(null)
 
@@ -65,11 +69,11 @@ export function EtherNodeTooltip({
   const { num, isPercent } = parseEtherValue(stat.value)
   const clickHint = isAllocated
     ? previewRemovedCount > 1
-      ? `Click to remove — ${previewRemovedCount} nodes lost`
-      : 'Click to remove'
+      ? t('ether.clickRemoveMany', { count: previewRemovedCount })
+      : t('ether.clickRemove')
     : previewAddedCount > 1
-      ? `Click to allocate — ${previewAddedCount} nodes`
-      : 'Click to allocate'
+      ? t('ether.clickAllocateMany', { count: previewAddedCount })
+      : t('ether.clickAllocate')
 
   return (
     <div
@@ -86,23 +90,23 @@ export function EtherNodeTooltip({
       }}
     >
       <TooltipHeader
-        title={stat.label}
-        subtitle={`${etherTypeLabel(node.t)} · ${etherRegionLabel(node.key)}`}
+        title={game('ether', { key: `${node.key}_name`, fallback: stat.label })}
+        subtitle={`${etherTypeLabel(node.t, locale)} · ${game('ether', { fallback: etherRegionLabel(node.key) })}`}
         tone={tone}
       />
       <TooltipSection>
         <TooltipText>
-          +{stat.value} {stat.desc}
+          +{stat.value} {game('ether', { key: `${node.key}_desc`, fallback: stat.desc })}
         </TooltipText>
       </TooltipSection>
       {allocatedSameKey > 0 && (
         <TooltipSection>
           <TooltipStat
-            label="Allocated of this notable"
+            label={t('ether.allocatedNotable')}
             value={`${allocatedSameKey}x`}
           />
           <TooltipStat
-            label="Current total"
+            label={t('common.currentTotal')}
             value={formatEtherTotal({
               total: Math.round(num * allocatedSameKey * 100) / 100,
               isPercent,

@@ -11,8 +11,10 @@ import ResistancesPanel from './config/ResistancesPanel'
 import SkillProjectilesPanel from './config/SkillProjectilesPanel'
 import EntityRatePanel from './config/EntityRatePanel'
 import CustomStatsPanel from './config/CustomStatsPanel'
+import { useI18n } from '../localization/i18n'
 
 export default function ConfigView() {
+  const { t } = useI18n()
   return (
     <div className="space-y-8">
       <header>
@@ -28,14 +30,14 @@ export default function ConfigView() {
           className="m-0 text-[22px] font-semibold tracking-[0.02em] text-accent-hot"
           style={{ textShadow: '0 0 16px rgba(224,184,100,0.18)' }}
         >
-          Configuration
+          {t('nav.config')}
         </h2>
       </header>
 
       <section className="space-y-4">
         <GroupHeading
-          title="Character"
-          subtitle="Class, level and attribute allocation."
+          title={t('config.character')}
+          subtitle={t('config.characterHelp')}
         />
         <CharacterBasics />
         <CharmSlotPanel />
@@ -43,8 +45,8 @@ export default function ConfigView() {
 
       <section className="space-y-4">
         <GroupHeading
-          title="Encounter & Combat"
-          subtitle="Buffs, procs, enemy and player state, and manual overrides the calculator reads."
+          title={t('config.combat')}
+          subtitle={t('config.combatHelp')}
         />
 
         <div className="grid items-start gap-4 xl:grid-cols-2">

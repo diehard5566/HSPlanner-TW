@@ -45,7 +45,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./frontend/test/setup.ts'],
-    include: ['{frontend,data}/**/*.{test,spec}.{ts,tsx}'],
+    include: ['{frontend,data,tools}/**/*.{test,spec}.{ts,tsx}'],
     css: false,
   },
 })

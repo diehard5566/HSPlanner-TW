@@ -31,8 +31,10 @@ import { EtherSummaryPanel } from './ether/EtherSummaryPanel'
 import { zoomAtPoint } from '../utils/tree/viewTransform'
 import ProgressionSlider from '../components/ProgressionSlider'
 import { useProgressionPreview } from '../hooks/useProgressionPreview'
+import { useI18n } from '../localization/i18n'
 
 export default function EtherView() {
+  const { t } = useI18n()
   const allocated = useBuild((s) => s.allocatedEtherNodes)
   const toggleNode = useBuild((s) => s.toggleEtherNode)
   const resetEther = useBuild((s) => s.resetEtherNodes)
@@ -440,7 +442,7 @@ export default function EtherView() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search ether nodes…"
+              placeholder={t('ether.search')}
               data-search-input
               className="w-64 rounded-[3px] border border-border-2 px-3 py-1.5 pl-9 pr-14 font-mono text-[11px] text-text placeholder:text-faint transition-colors focus:border-accent-deep focus:outline-none focus:ring-2 focus:ring-accent-hot/15"
               style={{
@@ -458,7 +460,7 @@ export default function EtherView() {
                 <button
                   onClick={() => setSearchQuery('')}
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded-[2px] px-1 font-mono text-[12px] text-faint transition-colors hover:text-accent-hot"
-                  aria-label="Clear search"
+                  aria-label={t('tree.clearSearch')}
                 >
                   ×
                 </button>

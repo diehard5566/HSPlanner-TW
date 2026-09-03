@@ -24,6 +24,8 @@ import type { MercSkill, SlotKey } from '../types'
 import { GearPanel, SlotRow } from './gear/SlotRail'
 import { GearSlotModal } from './gear/GearSlotModal'
 import { getSocketPickerRows } from './gear/lib/socketPickerRows'
+import { useGameTranslations } from '../localization/game'
+import { useI18n } from '../localization/i18n'
 
 function SkillRow({
   skill,
@@ -38,6 +40,7 @@ function SkillRow({
   maxRank: number
   onSetRank: (rank: number) => void
 }) {
+  const { game } = useGameTranslations()
   const icon = resolveSkillIcon({ id: skill.id, classId })
   return (
     <li
@@ -73,7 +76,7 @@ function SkillRow({
               rank > 0 ? 'text-accent-hot' : 'text-text'
             }`}
           >
-            {skill.name}
+            {game('talent', { fallback: skill.name })}
           </span>
           <span className="shrink-0 font-mono text-[8.5px] uppercase tracking-[0.16em] text-faint">
             {skill.kind}
@@ -89,7 +92,7 @@ function SkillRow({
           )}
         </span>
         <span className="mt-0.5 block text-[10.5px] leading-snug text-muted">
-          {skill.description}
+          {game('talent', { fallback: skill.description })}
         </span>
       </span>
       <span className="flex shrink-0 items-center gap-1 self-center">
@@ -124,6 +127,8 @@ function SkillRow({
 }
 
 export default function MercView() {
+  const { locale, t } = useI18n()
+  const { game } = useGameTranslations()
   const mercClassId = useBuild((s) => s.mercClassId)
   const mercSkillRanks = useBuild((s) => s.mercSkillRanks)
   const mercInventory = useBuild((s) => s.mercInventory)
@@ -263,7 +268,7 @@ export default function MercView() {
                     selected ? 'text-accent-hot' : 'text-text'
                   }`}
                 >
-                  {c.name}
+                  {game('talent', { fallback: c.name })}
                 </span>
                 <span className="block font-mono text-[9px] uppercase tracking-[0.16em] text-muted">
                   {c.role}
@@ -330,7 +335,7 @@ export default function MercView() {
             </GearPanel>
 
             <GearPanel
-              title={`${cls.name} Skills`}
+              title={`${game('talent', { fallback: cls.name })} ${t('skills.title')}`}
               trailing={
                 <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
                   <span className={pointsSpent > 0 ? 'text-accent-hot' : 'text-muted'}>
@@ -425,13 +430,13 @@ export default function MercView() {
                   {sharedSkills.map((s) => (
                     <li key={s.id} className="leading-snug">
                       <span className="block text-[11.5px] text-stat-green">
-                        {s.name}{' '}
+                        {game('talent', { fallback: s.name })}{' '}
                         <span className="font-mono text-[10px] text-faint">
                           {mercSkillRanks[s.id]}/{mercData.maxSkillRank}
                         </span>
                       </span>
                       <span className="block text-[10px] text-faint">
-                        {s.description}
+                        {game('talent', { fallback: s.description })}
                       </span>
                     </li>
                   ))}
@@ -450,7 +455,7 @@ export default function MercView() {
           }
           equipped={mercInventory[activeSlot]}
           offhandLocked={offhandLocked}
-          socketPickerRows={getSocketPickerRows()}
+          socketPickerRows={getSocketPickerRows(locale)}
           inventory={mercInventory}
           hideCompare
           onCommit={(item) => {
