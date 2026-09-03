@@ -28,6 +28,7 @@ import { effectiveCap, formatValue, isZero, rangedMax } from '../utils/item/stat
 import { isImageUrl } from '../utils/imageUrl'
 import type { RangedValue } from '../types'
 import { useGameTranslations } from '../localization/game'
+import { useUiText } from '../localization/uiText'
 
 const ATTRIBUTE_ORDER = [
   'strength',
@@ -90,7 +91,8 @@ interface LoadoutEntry {
 }
 
 export default function CharacterView() {
-  const { game } = useGameTranslations()
+  const { game, display } = useGameTranslations()
+  const ui = useUiText()
   const classId = useBuild((s) => s.classId)
   const level = useBuild((s) => s.level)
   const allocated = useBuild((s) => s.allocated)
@@ -375,7 +377,7 @@ export default function CharacterView() {
                 {formatValue(attributes[key] ?? 0, key)}
               </div>
               <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-                {delta > 0 ? `+${delta} added` : 'base'}
+                {delta > 0 ? `+${delta} ${ui('added')}` : ui('Base')}
               </div>
               <span
                 aria-hidden
@@ -391,7 +393,7 @@ export default function CharacterView() {
 
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <Card>
-          <SectionHead title={`Total DPS${skillName ? ` · ${skillName}` : ''}`} />
+          <SectionHead title={`${ui('Total DPS')}${skillName ? ` · ${display(skillName)}` : ''}`} />
           <div
             className="font-mono text-[44px] font-semibold leading-none tracking-[0.01em] text-accent-hot tabular-nums"
             style={{ textShadow: '0 0 18px rgba(224,184,100,0.22)' }}
@@ -405,7 +407,7 @@ export default function CharacterView() {
                 <span className="text-muted">{fmtRate(rate)}</span> / sec
               </>
             ) : (
-              'select a main skill to see the breakdown'
+              ui('Select a main skill to see the breakdown')
             )}
           </div>
 
@@ -464,7 +466,7 @@ export default function CharacterView() {
                   <span
                     className={`w-24 shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] ${r.cls}`}
                   >
-                    {r.label}
+                    {ui(r.label)}
                   </span>
                   <span
                     className={`relative h-1.5 flex-1 overflow-hidden rounded-full bg-panel-2 ${r.cls}`}
@@ -561,19 +563,20 @@ function LoadoutCard({
   empty: string
 }) {
   const { gameAny } = useGameTranslations()
+  const ui = useUiText()
   return (
     <Card>
       <SectionHead
         title={title}
         trailing={
           <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-            {entries.length} active
+            {entries.length} {ui('active')}
           </span>
         }
       />
       {entries.length === 0 ? (
         <p className="font-mono text-[12px] tracking-[0.04em] text-muted italic">
-          {empty}
+          {ui(empty)}
         </p>
       ) : (
         <ul className="space-y-2">
@@ -639,6 +642,7 @@ function SectionHead({
   title: string
   trailing?: ReactNode
 }) {
+  const ui = useUiText()
   return (
     <div className="mb-3 flex items-center justify-between gap-3 border-b border-accent-deep/20 pb-2">
       <div className="flex items-center gap-2">
@@ -648,7 +652,7 @@ function SectionHead({
           style={{ boxShadow: '0 0 6px rgba(224,184,100,0.5)' }}
         />
         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent-hot/70">
-          {title}
+          {ui(title)}
         </span>
       </div>
       {trailing}
@@ -665,6 +669,7 @@ function PointStat({
   value: number
   total?: number
 }) {
+  const ui = useUiText()
   return (
     <div
       className="min-w-24 rounded-[3px] border border-border-2 px-3 py-2"
@@ -674,7 +679,7 @@ function PointStat({
       }}
     >
       <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-faint">
-        {label}
+        {ui(label)}
       </div>
       <div className="mt-0.5 font-mono text-[18px] font-semibold tabular-nums text-accent-hot">
         {value}
@@ -697,6 +702,7 @@ function Metric({
   hint?: string
   valueClass?: string
 }) {
+  const ui = useUiText()
   return (
     <div
       className="rounded-[3px] border border-border-2 px-3 py-2.5"
@@ -707,7 +713,7 @@ function Metric({
       }}
     >
       <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-faint">
-        {label}
+        {ui(label)}
       </div>
       <div
         className={`mt-1 font-mono text-[18px] font-semibold tabular-nums ${valueClass ?? 'text-text'}`}
@@ -736,10 +742,11 @@ function DefRow({
   accent?: string
   hint?: string
 }) {
+  const ui = useUiText()
   const zero = isZero(value)
   return (
     <div className="flex items-baseline justify-between gap-2 py-0.75">
-      <span className="flex-1 text-muted">{label}</span>
+      <span className="flex-1 text-muted">{ui(label)}</span>
       {hint && (
         <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-faint">
           {hint}

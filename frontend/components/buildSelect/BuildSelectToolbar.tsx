@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react'
+import { useUiText } from '../../localization/uiText'
 import type { SavedBuild } from '../../utils/build/savedBuilds'
 import type { Scope } from './FolderTree'
 import type { Overlay } from './buildSelectTypes'
@@ -31,6 +32,7 @@ export function BuildSelectToolbar({
   onOverlay,
   onCopy,
 }: BuildSelectToolbarProps) {
+  const ui = useUiText()
   const searchRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -115,7 +117,7 @@ export function BuildSelectToolbar({
           ref={searchRef}
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search builds, classes, tags…"
+          placeholder={ui('Search builds, classes, tags…')}
           className="min-w-0 flex-1 bg-transparent text-[12px] text-text outline-none placeholder:text-faint"
         />
         <kbd className="shrink-0 rounded-[2px] border border-border-2 bg-panel-3 px-[5px] py-[1px] font-mono text-[9px] tracking-[0.1em] text-faint">
@@ -143,6 +145,7 @@ function ToolButton({
   danger?: boolean
   onClick: () => void
 }) {
+  const ui = useUiText()
   return (
     <button
       type="button"
@@ -160,7 +163,7 @@ function ToolButton({
       >
         {icon}
       </span>
-      {label}
+      {ui(label)}
     </button>
   )
 }

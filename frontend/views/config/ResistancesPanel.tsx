@@ -1,8 +1,10 @@
 import { useBuild } from '../../store/build'
 import { CountBadge, Panel } from './configPrimitives'
 import { ENEMY_RESISTANCE_TYPES, RESIST_COLOR } from './constants'
+import { useUiText } from '../../localization/uiText'
 
 export default function ResistancesPanel() {
+  const ui = useUiText()
   const enemyResistances = useBuild((s) => s.enemyResistances)
   const setEnemyResistance = useBuild((s) => s.setEnemyResistance)
 
@@ -39,7 +41,7 @@ export default function ResistancesPanel() {
               <span
                 className={`font-mono text-[10px] font-semibold uppercase tracking-[0.18em] ${colorClass}`}
               >
-                {r.label}
+                {ui(r.label)}
               </span>
               <div
                 className="inline-flex items-center rounded-[3px] border border-border-2 px-1.5 transition-colors focus-within:border-accent-hot"

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { UiText } from "../../localization/LocalizedText";
 import {
   installUpdate,
   type InstallProgress,
@@ -265,7 +266,7 @@ export default function UpdateModal({
               <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-faint">
                 Channel
               </span>
-              <span className="font-mono text-[11px] text-text">stable</span>
+              <span className="font-mono text-[11px] text-text"><UiText>stable</UiText></span>
             </span>
           </section>
         )}
@@ -552,4 +553,3 @@ function phaseLabel(phase: InstallProgress["phase"]): string {
       return "";
   }
 }
-

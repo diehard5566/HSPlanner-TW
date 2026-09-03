@@ -1,8 +1,10 @@
 import { useBuild } from '../../store/build'
 import { CountBadge, Panel } from './configPrimitives'
 import { ENEMY_CONDITIONS } from './constants'
+import { useUiText } from '../../localization/uiText'
 
 export default function EnemyConditionsPanel() {
+  const ui = useUiText()
   const enemyConditions = useBuild((s) => s.enemyConditions)
   const setEnemyCondition = useBuild((s) => s.setEnemyCondition)
 
@@ -46,7 +48,7 @@ export default function EnemyConditionsPanel() {
                   c.color ?? (checked ? 'text-accent-hot' : 'text-text')
                 }
               >
-                {c.label}
+                {ui(c.label)}
               </span>
             </label>
           )

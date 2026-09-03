@@ -11,6 +11,7 @@ import { affixAverageStats, buildCrystalModTooltip } from '../tooltips'
 import { SectionCard } from '../SectionCard'
 import { SectionIcon } from '../sectionIcons'
 import { useAffixDisplayRanges } from './AffixesSection'
+import { useGameTranslations } from '../../../localization/game'
 
 export function ForgedModsSection({
   forgeKind,
@@ -23,6 +24,7 @@ export function ForgedModsSection({
   onAdd: (modId: string, tier: number) => void
   onRemove: (index: number) => void
 }) {
+  const { display } = useGameTranslations()
   const [open, setOpen] = useState(false)
   const mods = useMemo(
     () => equipped.forgedMods ?? [],
@@ -124,7 +126,7 @@ export function ForgedModsSection({
                     ? formatValue(eq.customValue, mod.statKey)
                     : formatAffixRangeFromValues(mod, modRanges[idx] ?? null)}
                 </span>
-                <span className="truncate text-text/85">{mod.name}</span>
+                <span className="truncate text-text/85">{display(mod.name)}</span>
                 <span className="rounded-xs border border-accent-deep/40 px-1 py-px font-mono text-[9px] tabular-nums text-accent-hot/75">
                   T{mod.tier}
                 </span>
@@ -133,7 +135,7 @@ export function ForgedModsSection({
                     className="rounded-xs border border-accent-hot/60 px-1 py-px font-mono text-[9px] tabular-nums text-accent-hot"
                     title="Custom value override"
                   >
-                    custom
+                    {display('Custom')}
                   </span>
                 )}
               </span>

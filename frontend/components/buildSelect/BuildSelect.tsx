@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { UiText } from '../../localization/LocalizedText'
 import { motion } from 'motion/react'
 import Logo from '../ui/Logo'
 import { HEADER_BTN_CLASS } from '../app/BuildsMenu'
@@ -511,7 +512,7 @@ export default function BuildSelect({
           </span>
         </div>
         <div className="ml-2.5 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-          <span className="text-faint">Builds</span>
+          <span className="text-faint"><UiText>Builds</UiText></span>
           <span className="text-faint">/</span>
           <span className="text-accent-hot">{breadcrumb}</span>
         </div>
@@ -519,7 +520,7 @@ export default function BuildSelect({
           {canClose && (
             <button type="button" onClick={onClose} className={HEADER_BTN_CLASS}>
               <span aria-hidden>←</span>
-              <span>Planner</span>
+              <span><UiText>Planner</UiText></span>
             </button>
           )}
         </div>

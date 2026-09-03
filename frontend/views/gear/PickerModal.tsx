@@ -6,6 +6,8 @@ import { useDialogA11y } from '../../hooks/useDialogA11y'
 import type { ItemRarity } from '../../types'
 import Tooltip from '../../components/ui/Tooltip'
 import type { TooltipTone } from '../../components/tooltipTones'
+import { useGameTranslations } from '../../localization/game'
+import { useUiText } from '../../localization/uiText'
 
 const RARITY_TEXT: Record<ItemRarity, string> = {
   common: 'text-white',
@@ -80,6 +82,8 @@ export default function PickerModal({
   onClear,
   footerActions,
 }: PickerModalProps) {
+  const { display } = useGameTranslations()
+  const ui = useUiText()
   const [q, setQ] = useState('')
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
@@ -181,7 +185,7 @@ export default function PickerModal({
                     aria-hidden
                     className="inline-block h-1 w-1 rounded-full bg-accent"
                   />
-                  {sectionLabel}
+                  {display(sectionLabel)}
                   {sectionAccent !== undefined && (
                     <span className="text-accent-hot">{sectionAccent}</span>
                   )}
@@ -191,7 +195,7 @@ export default function PickerModal({
                 id={headingId}
                 className="m-0 text-[17px] font-semibold tracking-[-0.01em] text-text"
               >
-                {title}
+                {display(title)}
               </h2>
             </div>
             <button
@@ -199,7 +203,7 @@ export default function PickerModal({
               onClick={onClose}
               className="rounded-md border border-border px-3 py-1.5 text-[12px] text-muted transition-colors hover:border-accent-deep hover:text-accent-hot"
             >
-              Close
+              {ui('Close')}
             </button>
           </header>
 
@@ -219,7 +223,7 @@ export default function PickerModal({
                 autoFocus
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder={searchPlaceholder}
+                placeholder={ui(searchPlaceholder)}
                 className="w-full rounded-md border border-border bg-bg/60 px-3 py-2 pl-9 text-[13px] text-text placeholder:text-faint focus:border-accent-deep focus:outline-none focus:ring-2 focus:ring-accent-hot/15"
               />
             </div>
@@ -231,7 +235,7 @@ export default function PickerModal({
           >
             {filteredRows.length === 0 ? (
               <div className="p-8 text-center text-sm text-muted">
-                {emptyMessage}
+                {ui(emptyMessage)}
               </div>
             ) : (
               groupedRows.map((g, gi) => (
@@ -247,7 +251,7 @@ export default function PickerModal({
                         className="inline-block h-1 w-1 rotate-45 bg-accent-deep"
                         aria-hidden="true"
                       />
-                      {g.group}
+                      {display(g.group)}
                     </div>
                   )}
                   {g.rows.map((r) => {
@@ -314,12 +318,12 @@ export default function PickerModal({
                           )}
                         </span>
                         <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-                          {r.kindLabel ?? ''}
+                          {r.kindLabel ? display(r.kindLabel) : ''}
                         </span>
                         <span
                           className={`truncate text-[13px] font-medium ${nameColor}`}
                         >
-                          {r.name}
+                          {display(r.name)}
                         </span>
                         {showTierBadge && (
                           <span
@@ -339,7 +343,7 @@ export default function PickerModal({
                               : ''
                           }`}
                         >
-                          {r.meta ?? ''}
+                          {typeof r.meta === 'string' ? display(r.meta) : (r.meta ?? '')}
                         </span>
                       </button>
                     )
@@ -381,10 +385,8 @@ export default function PickerModal({
               />
               <span className="truncate">
                 {selectedId
-                  ? `Selected: ${
-                      rows.find((r) => r.id === selectedId)?.name ?? selectedId
-                    }`
-                  : 'Nothing selected'}
+                  ? `${ui('Selected')}: ${display(rows.find((r) => r.id === selectedId)?.name ?? selectedId)}`
+                  : ui('Nothing selected')}
               </span>
             </div>
             <div className="flex shrink-0 gap-2">
@@ -397,7 +399,7 @@ export default function PickerModal({
                   }}
                   className="rounded-md border border-border bg-transparent px-3 py-1.5 text-[12px] text-muted transition-colors hover:border-stat-red hover:text-stat-red"
                 >
-                  Clear
+                  {ui('Clear')}
                 </button>
               )}
             </div>
@@ -441,4 +443,3 @@ function FallbackIcon({
     />
   )
 }
-

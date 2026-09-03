@@ -63,6 +63,9 @@ export function translateDisplayText(locale: Locale, text: string): string {
     return text.split(' · ').map((part) => translateDisplayText(locale, part)).join(' · ')
   }
 
+  const tierPrefix = text.match(/^(T\d+)\s+(.+)$/)
+  if (tierPrefix) return `${tierPrefix[1]} ${translateDisplayText(locale, tierPrefix[2]!)}`
+
   const countedItem = text.match(/^(.*?)(\s+×\d+)$/)
   if (countedItem) {
     return `${translateDisplayText(locale, countedItem[1]!)}${countedItem[2]}`
@@ -76,8 +79,18 @@ export function translateDisplayText(locale: Locale, text: string): string {
   // Values and roll ranges are generated separately from their stat names.
   const statLine = text.match(/^([+−-]?(?:\[[^\]]+\]|\d[\d.,]*(?:\s*[-–]\s*\d[\d.,]*)?)(?:%|x|s)?)(?:\s+to)?\s+(.+)$/i)
   if (statLine) {
-    const translatedStat = translateGameTextAny(locale, statLine[2]!)
+    const uiStat = translateUiText(locale, statLine[2]!)
+    const translatedStat = uiStat !== statLine[2]
+      ? uiStat
+      : translateGameTextAny(locale, statLine[2]!)
     if (translatedStat !== statLine[2]) return `${statLine[1]} ${translatedStat}`
+  }
+
+  const parenthetical = text.match(/^(.*?)\s+\(([^)]+)\)$/)
+  if (parenthetical) {
+    const head = translateDisplayText(locale, parenthetical[1]!)
+    const tail = translateUiText(locale, parenthetical[2]!)
+    if (head !== parenthetical[1] || tail !== parenthetical[2]) return `${head}（${tail}）`
   }
 
   return text

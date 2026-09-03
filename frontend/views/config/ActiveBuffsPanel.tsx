@@ -3,8 +3,12 @@ import { SkillIconImage } from '../../components/SkillIconImage'
 import { resolveSkillIcon, skills } from '@data'
 import { useBuild } from '../../store/build'
 import { CountBadge, Panel } from './configPrimitives'
+import { useGameTranslations } from '../../localization/game'
+import { useUiText } from '../../localization/uiText'
 
 export default function ActiveBuffsPanel() {
+  const { game } = useGameTranslations()
+  const ui = useUiText()
   const classId = useBuild((s) => s.classId)
   const skillRanks = useBuild((s) => s.skillRanks)
   const activeBuffs = useBuild((s) => s.activeBuffs)
@@ -35,7 +39,7 @@ export default function ActiveBuffsPanel() {
     >
       {buffSkills.length === 0 ? (
         <p className="font-mono text-[12px] tracking-[0.04em] text-muted italic">
-          No buffs available for this class.
+          {ui('No buffs available for this class.')}
         </p>
       ) : (
         <ul className="space-y-2">
@@ -78,14 +82,14 @@ export default function ActiveBuffsPanel() {
                       <div
                         className={`truncate text-sm font-medium ${checked ? 'text-accent-hot' : 'text-text'}`}
                       >
-                        {s.name}
+                        {game('talent', { fallback: s.name })}
                       </div>
                     </span>
                   </span>
                   {s.effectDuration !== undefined && (
                     <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-faint tabular-nums">
                       <span className="text-text">{s.effectDuration}</span>
-                      s duration
+                      {ui('s duration')}
                     </span>
                   )}
                 </label>

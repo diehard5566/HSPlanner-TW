@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import type { Folder } from '../../utils/build/savedBuilds'
 import { CaretIcon, PlusIcon } from './buildSelectIcons'
+import { useUiText } from '../../localization/uiText'
 
 export type Scope =
   | { kind: 'recent' }
@@ -147,9 +148,10 @@ function Row({
 }
 
 function GroupLabel({ children }: { children: ReactNode }) {
+  const ui = useUiText()
   return (
     <div className="px-3.5 pb-1 pt-2 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-faint">
-      {children}
+      {typeof children === 'string' ? ui(children) : children}
     </div>
   )
 }

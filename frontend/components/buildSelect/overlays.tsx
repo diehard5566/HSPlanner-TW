@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import type { Folder } from '../../utils/build/savedBuilds'
 import { CaretIcon } from './buildSelectIcons'
 import { Modal } from '../ui/Modal'
+import { useUiText } from '../../localization/uiText'
 
 const GOLD_BTN = 'linear-gradient(180deg, #3a2f1a, #2a2418)'
 
@@ -50,9 +51,10 @@ function OverlayShell({
 }
 
 function FieldLabel({ children }: { children: ReactNode }) {
+  const ui = useUiText()
   return (
     <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
-      {children}
+      {typeof children === 'string' ? ui(children) : children}
     </span>
   )
 }
@@ -78,6 +80,7 @@ export function TextPromptOverlay({
   onSubmit: (value: string) => void
   onClose: () => void
 }) {
+  const ui = useUiText()
   const [value, setValue] = useState(initial)
   const submit = () => {
     const trimmed = value.trim()
@@ -98,7 +101,7 @@ export function TextPromptOverlay({
             className={BTN_GOLD}
             style={{ background: GOLD_BTN }}
           >
-            {submitLabel}
+            {ui(submitLabel)}
           </button>
         </>
       }
@@ -108,7 +111,7 @@ export function TextPromptOverlay({
         autoFocus
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder}
+        placeholder={placeholder ? ui(placeholder) : undefined}
         onKeyDown={(e) => {
           if (e.key === 'Enter') submit()
         }}
@@ -117,7 +120,7 @@ export function TextPromptOverlay({
       />
       {hint && (
         <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-          {hint}
+          {ui(hint)}
         </p>
       )}
     </OverlayShell>
@@ -236,6 +239,7 @@ export function ImportOverlay({
   onImport: (text: string) => Promise<string | null>
   onClose: () => void
 }) {
+  const ui = useUiText()
   const [text, setText] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -274,7 +278,7 @@ export function ImportOverlay({
             className={BTN_GOLD}
             style={{ background: GOLD_BTN }}
           >
-            {busy ? 'Importing…' : 'Import & open'}
+            {ui(busy ? 'Importing…' : 'Import & open')}
           </button>
         </>
       }
@@ -287,7 +291,7 @@ export function ImportOverlay({
           setText(e.target.value)
           setError(null)
         }}
-        placeholder="Paste shared build code…"
+        placeholder={ui('Paste shared build code…')}
         rows={6}
         className={`${INPUT_CLASS} resize-none font-mono text-[11px]`}
         style={INPUT_STYLE}
@@ -297,7 +301,7 @@ export function ImportOverlay({
         onClick={() => fileRef.current?.click()}
         className="self-start rounded-[3px] border border-border-2 bg-panel-2 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted transition-colors hover:border-accent-deep hover:text-accent-hot"
       >
-        Choose file…
+        {ui('Choose file…')}
       </button>
       {error && (
         <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-stat-red">
@@ -411,6 +415,7 @@ export function TagsOverlay({
   onSave: (tags: string[]) => void
   onClose: () => void
 }) {
+  const ui = useUiText()
   const [tags, setTags] = useState<string[]>(initial)
   const [draft, setDraft] = useState('')
 
@@ -444,7 +449,7 @@ export function TagsOverlay({
             className={BTN_GOLD}
             style={{ background: GOLD_BTN }}
           >
-            Save tags
+            {ui('Save tags')}
           </button>
         </>
       }
@@ -469,7 +474,7 @@ export function TagsOverlay({
         ))}
         {tags.length === 0 && (
           <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-            No tags
+            {ui('No tags')}
           </span>
         )}
       </div>
@@ -477,7 +482,7 @@ export function TagsOverlay({
         autoFocus
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
-        placeholder="Type a tag, press Enter…"
+        placeholder={ui('Type a tag, press Enter…')}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ',') {
             e.preventDefault()

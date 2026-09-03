@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { deriveDefenseInsights } from '../utils/build/ehp'
 import { rangedMax } from '../utils/item/stats'
 import type { RangedValue } from '../types'
+import { useUiText } from '../localization/uiText'
 
 interface EhpSummaryProps {
   stats: Record<string, RangedValue>
@@ -13,6 +14,7 @@ function fmtPct(value: number): number {
 }
 
 export function EhpSummary({ stats, statsCombined }: EhpSummaryProps) {
+  const ui = useUiText()
   const merged = useMemo(
     () => ({ ...stats, ...statsCombined }),
     [stats, statsCombined],
@@ -23,14 +25,14 @@ export function EhpSummary({ stats, statsCombined }: EhpSummaryProps) {
   const block = rangedMax(merged['block_chance'] ?? 0)
   const dodge = rangedMax(merged['dodge_chance'] ?? 0)
   const spellDodge = rangedMax(merged['dodge_spell_hits'] ?? 0)
-  if (block > 0) avoidance.push(`block ${fmtPct(block)}%`)
-  if (dodge > 0) avoidance.push(`dodge ${fmtPct(dodge)}%`)
-  if (spellDodge > 0) avoidance.push(`spell dodge ${fmtPct(spellDodge)}%`)
+  if (block > 0) avoidance.push(`${ui('block')} ${fmtPct(block)}%`)
+  if (dodge > 0) avoidance.push(`${ui('dodge')} ${fmtPct(dodge)}%`)
+  if (spellDodge > 0) avoidance.push(`${ui('spell dodge')} ${fmtPct(spellDodge)}%`)
 
   return (
     <div className="mb-3 border-b border-dashed border-accent-deep/25 pb-3">
       <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-        Avoidance:{' '}
+        {ui('Avoidance')}:{' '}
         <span className="text-muted">
           {avoidance.length > 0 ? avoidance.join(' · ') : '—'}
         </span>
@@ -43,7 +45,7 @@ export function EhpSummary({ stats, statsCombined }: EhpSummaryProps) {
               key={insight.text}
               className="font-mono text-[10px] tracking-[0.06em] text-accent-hot/80"
             >
-              ▸ {insight.text}
+              ▸ {ui(insight.text)}
             </div>
           ))}
         </div>

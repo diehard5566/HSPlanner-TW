@@ -22,6 +22,7 @@ import {
 import { formatPair, formatStatPair } from './skillFormat'
 import { useI18n } from '../../localization/i18n'
 import { useGameTranslations } from '../../localization/game'
+import { UiText } from '../../localization/LocalizedText'
 
 export function SkillDetailsPanel({
   skill,
@@ -59,7 +60,7 @@ export function SkillDetailsPanel({
   buffingAuraEffectiveness: RangedValue
 }) {
   const { t } = useI18n()
-  const { game } = useGameTranslations()
+  const { game, display } = useGameTranslations()
   if (!skill) {
     return (
       <aside
@@ -272,7 +273,7 @@ export function SkillDetailsPanel({
                   )}
                 {tagSkillsBonuses.map((row) => (
                   <div key={row.key} className="flex justify-between">
-                    <span className="text-muted">+ to {row.label} Skills</span>
+                    <span className="text-muted">{display(`+ to ${row.label} Skills`)}</span>
                     <span className="text-accent-hot">
                       +{formatPair(row.value)}
                     </span>
@@ -290,7 +291,7 @@ export function SkillDetailsPanel({
             )}
             {hasAuraBonus && (
               <div className="flex justify-between">
-                <span className="text-muted">Buffing Aura Effectiveness</span>
+                <span className="text-muted"><UiText>Buffing Aura Effectiveness</UiText></span>
                 <span className="text-accent-hot">
                   {formatStatPair(
                     'buffing_aura_effectiveness',

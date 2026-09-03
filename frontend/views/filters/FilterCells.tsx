@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
 import type { CellState } from './filterModel'
+import { useUiText } from '../../localization/uiText'
 
 export const FILTER_BTN_CLASS =
   'inline-flex h-[28px] shrink-0 items-center gap-1.5 rounded-[3px] border border-border-2 px-3 text-[12px] font-medium text-muted transition-colors hover:border-accent-deep hover:text-accent-hot disabled:cursor-not-allowed disabled:opacity-40'
@@ -39,11 +40,12 @@ interface FilterCellProps {
 }
 
 export function FilterCell({ state, title, onToggle, onHighlight }: FilterCellProps) {
+  const ui = useUiText()
   return (
     <button
       type="button"
-      title={title}
-      aria-label={title}
+      title={ui(title)}
+      aria-label={ui(title)}
       onClick={onToggle}
       onContextMenu={(e) => {
         e.preventDefault()
@@ -56,6 +58,7 @@ export function FilterCell({ state, title, onToggle, onHighlight }: FilterCellPr
 }
 
 function LegendSwatch({ state, label }: { state: CellState; label: string }) {
+  const ui = useUiText()
   return (
     <span className="inline-flex items-center gap-1.5">
       <span
@@ -63,12 +66,13 @@ function LegendSwatch({ state, label }: { state: CellState; label: string }) {
         className={`h-[11px] w-[11px] rounded-[2px] border ${CELL_CLASS[state]}`}
         style={CELL_STYLE[state]}
       />
-      {label}
+      {ui(label)}
     </span>
   )
 }
 
 export function CellLegend() {
+  const ui = useUiText()
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 font-mono text-[9.5px] uppercase tracking-[0.14em] text-faint">
       <LegendSwatch state="visible" label="Shown" />
@@ -76,7 +80,7 @@ export function CellLegend() {
       <LegendSwatch state="highlighted" label="Highlighted" />
       <span aria-hidden className="h-[12px] w-px bg-border" />
       <span className="normal-case tracking-[0.08em]">
-        Left-click toggles · right-click highlights
+        {ui('Left-click toggles · right-click highlights')}
       </span>
     </div>
   )

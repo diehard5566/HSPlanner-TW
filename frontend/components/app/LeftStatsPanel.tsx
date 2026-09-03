@@ -39,6 +39,8 @@ import {
   effectiveSkillTags,
   entityTagOf,
 } from "../../utils/skills/skillTags";
+import { useUiText } from "../../localization/uiText";
+import { useGameTranslations } from "../../localization/game";
 import {
   entityAttackRate,
   entityAttackRateFixedKey,
@@ -47,6 +49,8 @@ import {
 } from "../../utils/build/entityRates";
 
 export default function LeftStatsPanel() {
+  const ui = useUiText();
+  const { game, display } = useGameTranslations();
   const classId = useBuild((s) => s.classId);
   const level = useBuild((s) => s.level);
   const allocated = useBuild((s) => s.allocated);
@@ -179,17 +183,17 @@ export default function LeftStatsPanel() {
                 className="inline-block h-1.5 w-1.5 shrink-0 rotate-45 bg-accent-hot"
                 style={{ boxShadow: "0 0 8px rgba(224,184,100,0.6)" }}
               />
-              <span>Character</span>
+              <span>{ui('Character')}</span>
             </div>
             <div
               className="text-[15px] font-semibold tracking-[0.02em] text-accent-hot"
               style={{ textShadow: "0 0 14px rgba(224,184,100,0.18)" }}
             >
-              {cls?.name ?? "No class"}
+              {cls ? game('main', { fallback: cls.name }) : ui('No class')}
             </div>
             {cls?.primaryAttribute && (
               <div className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-accent-deep">
-                Primary · {cls.primaryAttribute}
+                {ui('Primary')} · {game('attribute', { fallback: cls.primaryAttribute })}
               </div>
             )}
           </div>
@@ -203,13 +207,13 @@ export default function LeftStatsPanel() {
       <Section title="Active Skills">
         {classSkills.length === 0 ? (
           <div className="font-mono text-[11px] tracking-[0.04em] text-muted italic">
-            No skills for this class
+            {ui('No skills for this class')}
           </div>
         ) : (
           <>
             {activeSkillIds.length === 0 ? (
               <div className="mb-2 font-mono text-[11px] tracking-[0.04em] text-muted italic">
-                Pick active skills in the Skills tab
+                {ui('Pick active skills in the Skills tab')}
               </div>
             ) : (
               <div className="mb-2 flex flex-col gap-1">
@@ -512,7 +516,7 @@ export default function LeftStatsPanel() {
               className="flex items-baseline justify-between gap-2 py-0.75"
             >
               <span className={`${color} flex-1 min-w-0 leading-tight`}>
-                {attr.name}
+                {game('attribute', { fallback: attr.name })}
               </span>
               <span
                 className={`font-mono tabular-nums shrink-0 whitespace-nowrap text-right ${color}`}
@@ -571,7 +575,7 @@ export default function LeftStatsPanel() {
               className="flex items-baseline justify-between gap-2 py-0.75"
             >
               <span className={`${r.className} flex-1 min-w-0 leading-tight`}>
-                {r.label}
+                {display(r.label)}
               </span>
               <span
                 className={`font-mono tabular-nums shrink-0 whitespace-nowrap text-right ${zero ? "text-faint" : r.className}`}
@@ -607,9 +611,10 @@ function StatLine({
   rawValue?: RangedValue;
   highlight?: "gold" | "blue";
 }) {
+  const { game } = useGameTranslations();
   const zero = isZero(value);
   const def = statDef(statKey);
-  const label = def?.name ?? statKey;
+  const label = game('attribute', { fallback: def?.name ?? statKey });
   const labelClass =
     highlight === "blue" ? "text-stat-blue" : "text-muted";
   const valueClass = zero
@@ -645,6 +650,7 @@ function Section({
   title: string;
   children: React.ReactNode;
 }) {
+  const ui = useUiText();
   return (
     <div className="border-b border-border/70 px-4 py-3">
       <div className="mb-2 flex items-center gap-2 border-b border-accent-deep/20 pb-1.5">
@@ -653,7 +659,7 @@ function Section({
           className="inline-block h-1 w-1 rotate-45 bg-accent-deep"
         />
         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent-hot/70">
-          {title}
+          {ui(title)}
         </span>
       </div>
       <div className="space-y-px">{children}</div>
@@ -662,9 +668,10 @@ function Section({
 }
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
+  const ui = useUiText();
   return (
     <div className="flex items-baseline justify-between gap-2 py-0.75">
-      <span className="text-muted flex-1 min-w-0 leading-tight">{label}</span>
+      <span className="text-muted flex-1 min-w-0 leading-tight">{ui(label)}</span>
       <span className="font-mono tabular-nums shrink-0 whitespace-nowrap text-right">
         {value}
       </span>

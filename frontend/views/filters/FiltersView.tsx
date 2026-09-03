@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { UiText } from '../../localization/LocalizedText'
 import type { SavedLootFilter } from '../../types'
 import { CornerMarks } from '../../components/ui/CornerMarks'
 import { IconAction } from '../../components/ui/IconAction'
@@ -321,7 +322,7 @@ function CheckIcon({ className }: { className?: string }) {
 
 function MetaChips({ meta }: { meta: FilterSummary | null }) {
   if (!meta) {
-    return <span className="text-[10px] text-stat-red/80">unreadable</span>
+    return <span className="text-[10px] text-stat-red/80"><UiText>unreadable</UiText></span>
   }
   if (meta.editedTypes === 0) {
     return (

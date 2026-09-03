@@ -9,8 +9,11 @@ import {
   type BuildSummary, type BuildSummaryDeps, type StatDiff, type Verdict,
 } from './lib/diff'
 import { RARITY_TEXT } from './lib/rarity'
+import { useUiText } from '../../localization/uiText'
+import { useGameTranslations } from '../../localization/game'
 
 function VerdictBadge({ verdict }: { verdict: Verdict }) {
+  const ui = useUiText()
   const config: Record<
     Verdict,
     { label: string; arrow: string; cls: string }
@@ -37,12 +40,14 @@ function VerdictBadge({ verdict }: { verdict: Verdict }) {
       className={`inline-flex items-center gap-2 rounded-xs border px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] ${c.cls}`}
     >
       <span className="text-[14px] leading-none">{c.arrow}</span>
-      <span>{c.label}</span>
+      <span>{ui(c.label)}</span>
     </div>
   )
 }
 
 function DiffRow({ diff }: { diff: StatDiff }) {
+  const { display } = useGameTranslations()
+  const ui = useUiText()
   const beforeText =
     diff.kind === 'new'
       ? 'none'
@@ -75,9 +80,9 @@ function DiffRow({ diff }: { diff: StatDiff }) {
       className={`grid items-center gap-2.5 border-b border-dashed border-border px-1 py-1.5 last:border-b-0 font-mono text-[11px] ${opacity}`}
       style={{ gridTemplateColumns: '1fr auto auto auto auto' }}
     >
-      <span className="font-sans text-[12px] text-text/85">{diff.label}</span>
+      <span className="font-sans text-[12px] text-text/85">{display(diff.label)}</span>
       <span className={`min-w-13.5 text-right tabular-nums ${beforeStyle}`}>
-        {beforeText}
+        {beforeText === 'none' ? ui('none') : beforeText}
       </span>
       <span className="text-faint">→</span>
       <span
@@ -105,15 +110,16 @@ function DiffSection({
   diffs: StatDiff[]
   emptyHint?: string
 }) {
+  const ui = useUiText()
   if (diffs.length === 0 && !emptyHint) return null
   return (
     <div className="mt-4 first:mt-0">
       <div className="mb-2 flex items-center gap-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
-        <span>{title}</span>
+        <span>{ui(title)}</span>
         <span className="h-px flex-1 bg-border" />
         {diffs.length > 0 && (
           <span className="font-normal tracking-[0.14em] text-faint">
-            {diffs.length} change{diffs.length === 1 ? '' : 's'}
+            {diffs.length} {ui('changes')}
           </span>
         )}
       </div>
@@ -133,6 +139,8 @@ function CompareSummary({
   before: BuildSummary
   after: BuildSummary
 }) {
+  const ui = useUiText()
+  const { display } = useGameTranslations()
   const beforeColor = before.itemRarity
     ? RARITY_TEXT[before.itemRarity]
     : 'text-faint'
@@ -143,18 +151,18 @@ function CompareSummary({
     <div className="mt-3 grid grid-cols-2 gap-px overflow-hidden rounded-[3px] border border-border bg-border">
       <div className="bg-panel-2/80 px-3 py-2">
         <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted">
-          Currently Equipped
+          {ui('Currently Equipped')}
         </div>
         <div className={`mt-1 truncate text-[13px] font-medium ${beforeColor}`}>
-          {before.itemName ?? <span className="italic text-faint">Empty slot</span>}
+          {before.itemName ? display(before.itemName) : <span className="italic text-faint">{ui('Empty slot')}</span>}
         </div>
       </div>
       <div className="bg-panel-2/80 px-3 py-2">
         <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted">
-          Selected
+          {ui('Selected')}
         </div>
         <div className={`mt-1 truncate text-[13px] font-medium ${afterColor}`}>
-          {after.itemName ?? <span className="italic text-faint">Empty slot</span>}
+          {after.itemName ? display(after.itemName) : <span className="italic text-faint">{ui('Empty slot')}</span>}
         </div>
       </div>
     </div>
@@ -168,6 +176,7 @@ function CompareItemCards({
   baselineEquipped: EquippedItem | null
   currentEquipped: EquippedItem | null
 }) {
+  const ui = useUiText()
   const baselineBase = baselineEquipped ? getItem(baselineEquipped.baseId) : null
   const currentBase = currentEquipped ? getItem(currentEquipped.baseId) : null
   if (!baselineBase && !currentBase) return null
@@ -181,9 +190,9 @@ function CompareItemCards({
     return (
       <div className="mb-4">
         <div className="mb-2 flex items-center gap-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
-          <span>Item</span>
+          <span>{ui('Item')}</span>
           <span className="h-px flex-1 bg-border" />
-          <span className="font-normal tracking-[0.14em] text-faint">unchanged</span>
+          <span className="font-normal tracking-[0.14em] text-faint">{ui('unchanged')}</span>
         </div>
         <ItemCard
           equipped={currentEquipped}
@@ -197,7 +206,7 @@ function CompareItemCards({
   return (
     <div className="mb-4">
       <div className="mb-3 flex items-center gap-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
-        <span>Items</span>
+        <span>{ui('Items')}</span>
         <span className="h-px flex-1 bg-border" />
       </div>
       <div className="flex items-start gap-3">

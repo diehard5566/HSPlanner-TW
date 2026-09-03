@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useBuild } from '../store/build'
 import { isSafeUrl, sanitizeHtml } from '../utils/sanitizeHtml'
 import { useI18n } from '../localization/i18n'
+import { useUiText } from '../localization/uiText'
 
 const PRESET_COLORS = [
   '#d4cfbf',
@@ -273,13 +274,14 @@ function ToolbarBtn({
   title: string
   label: React.ReactNode
 }) {
+  const ui = useUiText()
   return (
     <button
       onMouseDown={(e) => {
         e.preventDefault()
         onClick()
       }}
-      title={title}
+      title={ui(title)}
       className="inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-[3px] border border-border-2 bg-panel-2 px-1.5 text-xs text-muted transition-colors hover:border-accent-deep hover:text-accent-hot"
     >
       {label}
@@ -292,6 +294,7 @@ function Divider() {
 }
 
 function ColorPalette({ onPick }: { onPick: (color: string) => void }) {
+  const ui = useUiText()
   const [pickerOpen, setPickerOpen] = useState(false)
   const [customColor, setCustomColor] = useState('#e0b864')
   return (
@@ -301,7 +304,7 @@ function ColorPalette({ onPick }: { onPick: (color: string) => void }) {
           e.preventDefault()
           setPickerOpen((o) => !o)
         }}
-        title="Text color"
+        title={ui('Text color')}
         className="inline-flex h-7 items-center gap-1 rounded-[3px] border border-border-2 bg-panel-2 px-1.5 text-xs text-muted transition-colors hover:border-accent-deep hover:text-accent-hot"
       >
         <span>A</span>

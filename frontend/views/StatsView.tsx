@@ -42,12 +42,14 @@ import { AttributesStrip, StatRow } from './stats/rows'
 import { EhpBreakdown } from './stats/EhpBreakdown'
 import { useI18n } from '../localization/i18n'
 import { useGameTranslations } from '../localization/game'
+import { useUiText } from '../localization/uiText'
 
 const NO_SUBTREE: Record<string, RangedValue> = {}
 
 export default function StatsView() {
   const { t } = useI18n()
   const { searchAny } = useGameTranslations()
+  const ui = useUiText()
   const classId = useBuild((s) => s.classId)
   const inventory = useBuild((s) => s.inventory)
   const skillRanks = useBuild((s) => s.skillRanks)
@@ -416,7 +418,7 @@ export default function StatsView() {
         <div className="flex items-center gap-1.5">
           {classes.length === 0 ? (
             <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-              Add a class JSON to begin
+              {ui('Add a class JSON to begin')}
             </span>
           ) : (
             FILTER_TABS.map((tab) => (
@@ -430,7 +432,7 @@ export default function StatsView() {
                     : 'border-border-2 text-faint hover:border-accent-deep hover:text-accent-hot'
                 }`}
               >
-                {tab.label}
+                {ui(tab.label)}
               </button>
             ))
           )}
@@ -519,14 +521,14 @@ export default function StatsView() {
           <Panel padded>
             {skillsForClass.length === 0 ? (
               <div className="py-2 text-center text-sm text-muted italic">
-                No skills defined for this class yet.
+                {ui('No skills defined for this class yet.')}
                 <br />
                 Add JSON files in{' '}
                 <code className="text-accent">src/data/skills/</code>.
               </div>
             ) : visibleSkills.length === 0 ? (
               <div className="py-2 text-center text-sm text-muted italic">
-                No skills match “{query}”.
+                {ui(`No skills match “${query}”.`)}
               </div>
             ) : (
               <ul className="m-0 flex list-none flex-col gap-2 p-0">
@@ -629,7 +631,7 @@ export default function StatsView() {
             return (
               <Panel title={t('stats.allStats')}>
                 <div className="py-2 text-center text-xs text-muted italic">
-                  No matches.
+                  {ui('No matches.')}
                 </div>
               </Panel>
             )
@@ -650,7 +652,7 @@ export default function StatsView() {
                     }}
                   >
                     <SubSectionLabel first={i === 0}>
-                      {s.label}
+                      {ui(s.label)}
                     </SubSectionLabel>
                     {renderList(s.keys)}
                   </div>

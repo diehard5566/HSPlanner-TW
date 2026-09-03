@@ -1,4 +1,5 @@
 import { useMemo, type ReactNode } from 'react'
+import { UiText } from '../../localization/LocalizedText'
 import { subskillAggregationNative } from '../../utils/calc/bridge'
 import type { SubtreeAggregation } from '../../utils/calc/bridge'
 import { useCalcResult } from '../../hooks/useCalcResult'
@@ -552,7 +553,7 @@ export function SkillEffectsBlock({
         )}
         {skill.requiresSkill && (
           <div className="flex items-baseline justify-between gap-2">
-            <span className="text-text/80">Requires skill</span>
+            <span className="text-text/80"><UiText>Requires skill</UiText></span>
             <span className="font-mono text-muted">
               «{skill.requiresSkill}»
             </span>

@@ -23,6 +23,7 @@ import ProgressionSlider from '../../components/ProgressionSlider'
 import SubskillTooltip from './SubskillTooltip'
 import { resolveSubskillIconUrl } from './subskillSprites'
 import { useGameTranslations } from '../../localization/game'
+import { useUiText } from '../../localization/uiText'
 
 const VIEWBOX = 600
 const BOARD_MAX = 560
@@ -42,6 +43,7 @@ interface Props {
 
 export default function SubtreeOverlay({ skill, onClose }: Props) {
   const { game } = useGameTranslations()
+  const ui = useUiText()
   const level = useBuild((s) => s.level)
   const subskillRanks = useBuild((s) => s.subskillRanks)
   const incSubskillRank = useBuild((s) => s.incSubskillRank)
@@ -136,7 +138,7 @@ export default function SubtreeOverlay({ skill, onClose }: Props) {
         headerActions={
           <>
             <div className="flex items-baseline gap-1.5 font-mono text-[11px] tracking-[0.08em] text-faint tabular-nums">
-              <span>Points</span>
+              <span>{ui('Points')}</span>
               <span className="text-[13px] font-semibold text-accent-hot">
                 {spent}
                 <span className="text-faint">/</span>
@@ -144,11 +146,11 @@ export default function SubtreeOverlay({ skill, onClose }: Props) {
               </span>
               {remaining > 0 ? (
                 <span className="text-[10px] uppercase tracking-[0.14em] text-accent-deep">
-                  {remaining} LEFT
+                  {remaining} {ui('left')}
                 </span>
               ) : (
                 <span className="text-[10px] uppercase tracking-[0.14em] text-faint">
-                  ALL SPENT
+                  {ui('All spent')}
                 </span>
               )}
             </div>
@@ -156,7 +158,7 @@ export default function SubtreeOverlay({ skill, onClose }: Props) {
               onClick={() => resetSubskillsFor(skill.id)}
               className={MODAL_BTN_CLASS}
             >
-              Reset
+              {ui('Reset')}
             </button>
           </>
         }
@@ -397,8 +399,8 @@ export default function SubtreeOverlay({ skill, onClose }: Props) {
           />
         </div>
         <div className="flex items-center justify-between gap-3 border-t border-border px-6 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-          <span>L-Click add · R-Click remove</span>
-          <span>Shift ×5 · Ctrl/Cmd+Shift all</span>
+          <span>{ui('L-Click add · R-Click remove')}</span>
+          <span>{ui('Shift ×5 · Ctrl/Cmd+Shift all')}</span>
         </div>
       </Modal>
       {hover &&

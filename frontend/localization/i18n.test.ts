@@ -42,10 +42,15 @@ describe('game localization fallback', () => {
     expect(translateDisplayText('zh-TW', 'Hand Axe ×2')).toBe('手斧 ×2')
     expect(translateDisplayText('zh-TW', 'Hand Axe · From Sockets')).toBe('手斧 · 來自插槽')
     expect(translateDisplayText('en', '+38% Attack Damage')).toBe('+38% Attack Damage')
+    expect(translateDisplayText('zh-TW', '-15% All Damage Taken Reduced')).toBe('-15% 所有承受傷害降低')
+    expect(translateDisplayText('zh-TW', '+3500 to Mana (Based on Level)')).toBe('+3500 法力（依等級計算）')
+    expect(translateDisplayText('zh-TW', 'Req Level 100 · Tier SS')).toBe('需求等級 100 · 階級 SS')
   })
 
   it('translates shared planner copy and generated counts', () => {
     expect(translateUiText('zh-TW', 'Affixes')).toBe('詞綴')
     expect(translateUiText('zh-TW', '2/4 pieces')).toBe('2/4 件')
+    expect(translateUiText('zh-TW', 'Enemy is Burning')).toBe('敵人正在燃燒')
+    expect(translateUiText('zh-TW', '6 rollable')).toBe('6 項可調整')
   })
 })

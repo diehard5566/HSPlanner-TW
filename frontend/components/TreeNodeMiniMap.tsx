@@ -1,6 +1,8 @@
 import { useMemo } from 'react'
 import treeBackground from '../assets/atlas/Incarnation_Background.png'
 import { useBuild } from '../store/build'
+import { useGameTranslations } from '../localization/game'
+import { useUiText } from '../localization/uiText'
 import { ADJ } from '../utils/tree/treeGraph'
 import {
   ALL_TREE_EDGES,
@@ -22,6 +24,8 @@ interface Props {
 }
 
 export default function TreeNodeMiniMap({ node, width = 340 }: Props) {
+  const { display } = useGameTranslations()
+  const ui = useUiText()
   const allocated = useBuild((s) => s.allocatedTreeNodes)
   const view = useMemo(() => {
     const vbX = node.x - ZOOM_VB_W / 2
@@ -70,13 +74,13 @@ export default function TreeNodeMiniMap({ node, width = 340 }: Props) {
         }}
       >
         <div className="font-mono text-[9px] uppercase tracking-[0.14em] text-faint">
-          Tree node
+          {ui('Tree node')}
         </div>
         <div className="mt-0.5 text-[12px] font-semibold text-accent-hot leading-tight">
-          {node.name}
+          {display(node.name)}
         </div>
         <div className="font-mono text-[9px] uppercase tracking-[0.12em] text-text/40 mt-0.5">
-          #{node.id} · {node.kind || 'normal'}
+          #{node.id} · {ui(node.kind || 'normal')}
         </div>
       </div>
       <div

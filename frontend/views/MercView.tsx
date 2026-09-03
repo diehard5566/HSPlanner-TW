@@ -26,6 +26,7 @@ import { GearSlotModal } from './gear/GearSlotModal'
 import { getSocketPickerRows } from './gear/lib/socketPickerRows'
 import { useGameTranslations } from '../localization/game'
 import { useI18n } from '../localization/i18n'
+import { useUiText } from '../localization/uiText'
 
 function SkillRow({
   skill,
@@ -41,6 +42,7 @@ function SkillRow({
   onSetRank: (rank: number) => void
 }) {
   const { game } = useGameTranslations()
+  const ui = useUiText()
   const icon = resolveSkillIcon({ id: skill.id, classId })
   return (
     <li
@@ -85,9 +87,9 @@ function SkillRow({
           {skill.shared && (
             <span
               className="shrink-0 rounded-[2px] border border-stat-green/40 px-1 py-px font-mono text-[8.5px] uppercase tracking-[0.14em] text-stat-green"
-              title="This skill also benefits your hero"
+              title={ui('This skill also benefits your hero')}
             >
-              Hero
+              {ui('Hero')}
             </span>
           )}
         </span>
@@ -128,7 +130,8 @@ function SkillRow({
 
 export default function MercView() {
   const { locale, t } = useI18n()
-  const { game } = useGameTranslations()
+  const { game, display } = useGameTranslations()
+  const ui = useUiText()
   const mercClassId = useBuild((s) => s.mercClassId)
   const mercSkillRanks = useBuild((s) => s.mercSkillRanks)
   const mercInventory = useBuild((s) => s.mercInventory)
@@ -408,10 +411,10 @@ export default function MercView() {
                   {sharedEffects.map((e, i) => (
                     <li key={`${e.itemName}-${e.effect}-${i}`} className="leading-snug">
                       <span className="block text-[11.5px] text-stat-green">
-                        {e.effect}
+                        {display(e.effect)}
                       </span>
                       <span className="block text-[10px] text-faint">
-                        {e.itemName}
+                        {display(e.itemName)}
                       </span>
                     </li>
                   ))}
@@ -419,7 +422,7 @@ export default function MercView() {
               )}
 
               <div className="mb-1.5 mt-2.5 border-t border-border pt-2 font-mono text-[9px] uppercase tracking-[0.16em] text-faint">
-                Skill effects
+                {ui('Skill effects')}
               </div>
               {sharedSkills.length === 0 ? (
                 <p className="m-0 pb-1 text-[11px] italic text-muted">

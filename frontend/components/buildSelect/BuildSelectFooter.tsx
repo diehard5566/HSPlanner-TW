@@ -1,3 +1,5 @@
+import { UiText } from '../../localization/LocalizedText'
+
 interface BuildSelectFooterProps {
   buildCount: number
   folderCount: number
@@ -40,7 +42,7 @@ export function BuildSelectFooter({
           checked={autoOpen}
           onChange={(e) => onToggleAutoOpen(e.target.checked)}
         />
-        <span>Auto-open last build</span>
+        <span><UiText>Auto-open last build</UiText></span>
       </label>
       <div className="flex-1" />
       <span className="inline-flex items-center gap-1.5 text-faint">

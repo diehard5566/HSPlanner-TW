@@ -1,4 +1,6 @@
 import { useId, useRef, useState, type ClipboardEvent } from 'react'
+import { UiText } from '../../localization/LocalizedText'
+import { useUiText } from '../../localization/uiText'
 import { Modal, MODAL_BTN_PRIMARY_CLASS, MODAL_FOOTER_CLASS } from '../ui/Modal'
 import Dropdown from '../ui/Dropdown'
 import {
@@ -56,6 +58,7 @@ export interface BugReportModalProps {
 }
 
 export default function BugReportModal({ buildCode, buildLabel, onClose }: BugReportModalProps) {
+  const ui = useUiText()
   const ids = useId()
   const fileInput = useRef<HTMLInputElement>(null)
   const [kind, setKind] = useState<BugReportKind>('bug')
@@ -133,7 +136,7 @@ export default function BugReportModal({ buildCode, buildLabel, onClose }: BugRe
       panelClassName="w-[36rem] max-w-[94vw] max-h-[88vh]"
     >
       <div className="flex flex-col gap-2.5 overflow-y-auto p-5">
-        <span className={LABEL_CLASS}>Type</span>
+        <span className={LABEL_CLASS}><UiText>Type</UiText></span>
         <Dropdown
           value={kind}
           options={KIND_OPTIONS}
@@ -145,20 +148,20 @@ export default function BugReportModal({ buildCode, buildLabel, onClose }: BugRe
         />
 
         <label htmlFor={`${ids}-title`} className={`${LABEL_CLASS} mt-1.5`}>
-          Title
+          {ui('Title')}
         </label>
         <input
           id={`${ids}-title`}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           maxLength={MAX_TITLE_LENGTH}
-          placeholder={TITLE_PLACEHOLDER[kind]}
+          placeholder={ui(TITLE_PLACEHOLDER[kind])}
           className={FIELD_CLASS}
           style={FIELD_BG}
         />
 
         <label htmlFor={`${ids}-desc`} className={`${LABEL_CLASS} mt-1.5`}>
-          Describe your issue
+          {ui('Describe your issue')}
         </label>
         <textarea
           id={`${ids}-desc`}
@@ -167,7 +170,7 @@ export default function BugReportModal({ buildCode, buildLabel, onClose }: BugRe
           onPaste={onPasteScreenshot}
           maxLength={MAX_DESCRIPTION_LENGTH}
           rows={4}
-          placeholder={DESCRIPTION_PLACEHOLDER[kind]}
+          placeholder={ui(DESCRIPTION_PLACEHOLDER[kind])}
           className={FIELD_CLASS}
           style={TEXTAREA_STYLE}
         />
@@ -175,7 +178,7 @@ export default function BugReportModal({ buildCode, buildLabel, onClose }: BugRe
         {isRepro && (
           <>
             <label htmlFor={`${ids}-steps`} className={`${LABEL_CLASS} mt-1.5`}>
-              Steps to reproduce (optional)
+              {ui('Steps to reproduce (optional)')}
             </label>
             <textarea
               id={`${ids}-steps`}
@@ -184,13 +187,13 @@ export default function BugReportModal({ buildCode, buildLabel, onClose }: BugRe
               onPaste={onPasteScreenshot}
               maxLength={MAX_STEPS_LENGTH}
               rows={4}
-              placeholder={STEPS_PLACEHOLDER}
+              placeholder={ui(STEPS_PLACEHOLDER)}
               className={FIELD_CLASS}
               style={TEXTAREA_STYLE}
             />
 
             <label htmlFor={`${ids}-expected`} className={`${LABEL_CLASS} mt-1.5`}>
-              What did you expect instead (optional)
+              {ui('What did you expect instead (optional)')}
             </label>
             <textarea
               id={`${ids}-expected`}
@@ -199,14 +202,14 @@ export default function BugReportModal({ buildCode, buildLabel, onClose }: BugRe
               onPaste={onPasteScreenshot}
               maxLength={MAX_EXPECTED_LENGTH}
               rows={2}
-              placeholder="A clear and concise description of what you expected to happen."
+              placeholder={ui('A clear and concise description of what you expected to happen.')}
               className={FIELD_CLASS}
               style={TEXTAREA_STYLE}
             />
           </>
         )}
 
-        <span className={`${LABEL_CLASS} mt-1.5`}>Screenshots (optional)</span>
+        <span className={`${LABEL_CLASS} mt-1.5`}><UiText>Screenshots (optional)</UiText></span>
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
@@ -214,17 +217,17 @@ export default function BugReportModal({ buildCode, buildLabel, onClose }: BugRe
             disabled={screenshots.length >= MAX_SCREENSHOTS}
             className="rounded-[3px] border border-border-2 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted transition-colors hover:border-accent-deep hover:text-accent-hot disabled:cursor-not-allowed disabled:opacity-40"
           >
-            Add image
+            {ui('Add image')}
           </button>
           <span className="text-[11px] text-faint">
-            or paste with Ctrl+V into any field — up to {MAX_SCREENSHOTS}, 8 MB each
+            {ui('or paste with Ctrl+V into any field — up to')} {MAX_SCREENSHOTS}，{ui('8 MB each')}
           </span>
           <input
             ref={fileInput}
             type="file"
             accept="image/*"
             multiple
-            aria-label="Add screenshots"
+            aria-label={ui('Add screenshots')}
             className="hidden"
             onChange={(e) => {
               addFiles(e.target.files)
@@ -254,14 +257,14 @@ export default function BugReportModal({ buildCode, buildLabel, onClose }: BugRe
         )}
 
         <label htmlFor={`${ids}-contact`} className={`${LABEL_CLASS} mt-1.5`}>
-          Discord name (optional)
+          {ui('Discord name (optional)')}
         </label>
         <input
           id={`${ids}-contact`}
           value={contact}
           onChange={(e) => setContact(e.target.value)}
           maxLength={MAX_CONTACT_LENGTH}
-          placeholder="So I can ask follow-up questions"
+          placeholder={ui('So I can ask follow-up questions')}
           className={FIELD_CLASS}
           style={FIELD_BG}
         />
@@ -278,7 +281,7 @@ export default function BugReportModal({ buildCode, buildLabel, onClose }: BugRe
               onChange={(e) => setAttachBuild(e.target.checked)}
               className="accent-[var(--color-accent-deep)]"
             />
-            Attach my build ({buildLabel ?? 'current build'}) so it can be reproduced
+            {ui('Attach my build')}（{buildLabel ?? ui('current build')}）{ui('so it can be reproduced')}
           </label>
         )}
       </div>
@@ -298,7 +301,7 @@ export default function BugReportModal({ buildCode, buildLabel, onClose }: BugRe
           className={MODAL_BTN_PRIMARY_CLASS}
           style={{ background: 'linear-gradient(180deg, #3a2f1a, #2a2418)' }}
         >
-          {isSuccess ? 'Done' : state.kind === 'busy' ? 'Sending…' : 'Send report'}
+          {ui(isSuccess ? 'Done' : state.kind === 'busy' ? 'Sending…' : 'Send report')}
         </button>
       </footer>
     </Modal>

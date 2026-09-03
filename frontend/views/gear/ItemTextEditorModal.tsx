@@ -10,6 +10,8 @@ import {
 } from '../../utils/item/itemTextFormat'
 import { Modal } from '../../components/ui/Modal'
 import { CustomAffixList, type StatRow } from './CustomAffixList'
+import { useUiText } from '../../localization/uiText'
+import { useGameTranslations } from '../../localization/game'
 
 interface Props {
   slotName: string
@@ -26,6 +28,8 @@ export default function ItemTextEditorModal({
   onSave,
   onClose,
 }: Props) {
+  const ui = useUiText()
+  const { display } = useGameTranslations()
   const [text, setText] = useState<string | null>(null)
   const [result, setResult] = useState<ParseResult>({
     equipped: null,
@@ -91,8 +95,8 @@ export default function ItemTextEditorModal({
     <Modal
       onClose={onClose}
       panelClassName="h-[88vh] w-[1100px] max-w-[96vw]"
-      eyebrow={<>Edit Item · {slotName}</>}
-      title={base.name}
+      eyebrow={<>{ui('Edit Item')} · {ui(slotName)}</>}
+      title={display(base.name)}
     >
         <div className="flex min-h-0 flex-1 flex-row">
           <div className="flex min-w-0 flex-[3] flex-col border-r border-border">
@@ -101,7 +105,7 @@ export default function ItemTextEditorModal({
                 className="inline-block h-1 w-1 rotate-45 bg-accent-deep"
                 aria-hidden="true"
               />
-              Text · edit affixes, stars, sockets, augment
+              {ui('Text · edit affixes, stars, sockets, augment')}
             </div>
             <textarea
               ref={textareaRef}
@@ -125,25 +129,25 @@ export default function ItemTextEditorModal({
                 className="inline-block h-1 w-1 rotate-45 bg-accent-deep"
                 aria-hidden="true"
               />
-              Validation
+              {ui('Validation')}
               {errorCount > 0 && (
                 <span className="ml-auto text-stat-red">
-                  {errorCount} error{errorCount !== 1 ? 's' : ''}
+                  {errorCount} {ui('errors')}
                 </span>
               )}
               {errorCount === 0 && warnCount > 0 && (
                 <span className="ml-auto text-stat-orange">
-                  {warnCount} warning{warnCount !== 1 ? 's' : ''}
+                  {warnCount} {ui('warnings')}
                 </span>
               )}
               {errorCount === 0 && warnCount === 0 && (
-                <span className="ml-auto text-accent-hot">all clear</span>
+                <span className="ml-auto text-accent-hot">{ui('all clear')}</span>
               )}
             </div>
             <div className="max-h-[40%] shrink-0 overflow-y-auto px-3 py-3 space-y-2">
               {result.errors.length === 0 ? (
                 <div className="rounded-[3px] border border-border-2 bg-panel-2/60 px-3 py-3 font-mono text-[11px] text-muted">
-                  All clear · save to apply changes to this slot.
+                  {ui('All clear · save to apply changes to this slot.')}
                 </div>
               ) : (
                 result.errors.map((err, i) => (
@@ -174,10 +178,10 @@ export default function ItemTextEditorModal({
             />
             <span className="truncate">
               {canSave
-                ? 'Ready to save'
+                ? ui('Ready to save')
                 : errorCount > 0
-                  ? 'Fix errors before saving'
-                  : 'Parsing…'}
+                  ? ui('Fix errors before saving')
+                  : ui('Parsing…')}
             </span>
           </div>
           <div className="flex shrink-0 gap-2">
@@ -190,7 +194,7 @@ export default function ItemTextEditorModal({
                   : 'cursor-not-allowed border-border-2 bg-transparent text-faint opacity-60'
               }`}
             >
-              Save
+              {ui('Save')}
             </button>
           </div>
         </footer>
@@ -199,6 +203,7 @@ export default function ItemTextEditorModal({
 }
 
 function ErrorRow({ err }: { err: ParseError }) {
+  const ui = useUiText()
   const isError = err.severity === 'error'
   const cls = isError
     ? 'border-stat-red/40 bg-stat-red/10 text-stat-red'
@@ -211,9 +216,9 @@ function ErrorRow({ err }: { err: ParseError }) {
       <div className="mb-0.5 flex items-center gap-2 text-[10px] uppercase tracking-[0.14em] opacity-80">
         <span>{tag}</span>
         <span>·</span>
-        <span>line {err.line}</span>
+        <span>{ui('line')} {err.line}</span>
       </div>
-      <div className="text-[11px]">{err.message}</div>
+      <div className="text-[11px]">{ui(err.message)}</div>
     </div>
   )
 }

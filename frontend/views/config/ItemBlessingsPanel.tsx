@@ -2,8 +2,10 @@ import { useMemo } from 'react'
 import { conditionalItemGrantedSkills, getItem } from '@data'
 import { useBuild } from '../../store/build'
 import { CountBadge, Panel } from './configPrimitives'
+import { useGameTranslations } from '../../localization/game'
 
 export default function ItemBlessingsPanel() {
+  const { display } = useGameTranslations()
   const playerConditions = useBuild((s) => s.playerConditions)
   const setPlayerCondition = useBuild((s) => s.setPlayerCondition)
   const inventory = useBuild((s) => s.inventory)
@@ -64,11 +66,11 @@ export default function ItemBlessingsPanel() {
               />
               <span className="min-w-0">
                 <span className={checked ? 'text-accent-hot' : 'text-text'}>
-                  {b.name}
+                  {display(b.name)}
                 </span>
                 {b.description && (
                   <span className="block text-[10px] leading-snug text-faint">
-                    {b.description}
+                    {display(b.description)}
                   </span>
                 )}
               </span>

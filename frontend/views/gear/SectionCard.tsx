@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState } from 'react'
+import { useGameTranslations } from '../../localization/game'
 
 type SectionTone = 'default' | 'satanic' | 'angelic' | 'set'
 
@@ -72,6 +73,7 @@ export function SectionCard({
   defaultOpen?: boolean
   children?: React.ReactNode
 }) {
+  const { display } = useGameTranslations()
   const t = SECTION_TONE[tone]
   const ctx = useContext(SectionsOpenContext)
   const [localOpen, setLocalOpen] = useState(defaultOpen)
@@ -90,7 +92,7 @@ export function SectionCard({
               aria-hidden="true"
             />
             <span className={`text-[12px] font-medium tracking-[0.01em] ${t.label}`}>
-              {label}
+              {display(label)}
             </span>
           </div>
           {rightSlot && <div className="flex items-center gap-2">{rightSlot}</div>}
@@ -137,7 +139,7 @@ export function SectionCard({
             />
           )}
           <span className={`text-[12px] font-medium tracking-[0.01em] ${t.label}`}>
-            {label}
+            {display(label)}
           </span>
         </div>
         <div className="flex items-center gap-2.5">

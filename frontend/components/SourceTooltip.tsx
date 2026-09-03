@@ -803,9 +803,9 @@ export default function SourceTooltip({
                 <kbd className="rounded-[2px] border border-border-2 bg-bg/60 px-1.5 py-[1px]">
                   Esc
                 </kbd>
-                <span className="ml-1.5">close</span>
+                <span className="ml-1.5">{ui('close')}</span>
                 <span className="mx-2 text-text/30">·</span>
-                <span>click outside to dismiss</span>
+                <span>{ui('click outside to dismiss')}</span>
               </div>
             </div>
           </div>,

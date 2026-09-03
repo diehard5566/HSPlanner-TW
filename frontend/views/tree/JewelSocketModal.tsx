@@ -7,6 +7,8 @@ import {
 import type { Affix, EquippedAffix, Gem, Rune, TreeSocketContent } from '../../types'
 import { UNCUT_JEWEL_MAX_AFFIXES } from '../../types'
 import { Modal } from '../../components/ui/Modal'
+import { useUiText } from '../../localization/uiText'
+import { useGameTranslations } from '../../localization/game'
 import Dropdown from '../../components/ui/Dropdown'
 
 const SOCKETABLE_ICONS = import.meta.glob<string>(
@@ -52,6 +54,7 @@ export default function JewelSocketModal({
   onClose,
   onApply,
 }: Props) {
+  const ui = useUiText()
   const [tab, setTab] = useState<Tab>(
     current?.kind === 'uncut' ? 'uncut' : 'items',
   )
@@ -103,7 +106,7 @@ export default function JewelSocketModal({
                   : undefined
               }
             >
-              {t.label}
+              {ui(t.label)}
             </button>
           ))}
         </div>
@@ -256,6 +259,8 @@ function ItemsTab({
   pending: TreeSocketContent | null
   onSelect: (id: string) => void
 }) {
+  const ui = useUiText()
+  const { display } = useGameTranslations()
   const [q, setQ] = useState('')
   const filter = q.trim().toLowerCase()
   const rows = filter
@@ -284,7 +289,7 @@ function ItemsTab({
             autoFocus
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search gems / runes / jewels…"
+            placeholder={ui('Search gems / runes / jewels…')}
             className="w-full rounded-[3px] border border-border-2 px-3 py-2 pl-9 text-text placeholder:text-faint focus:border-accent-deep focus:outline-none focus:ring-2 focus:ring-accent-hot/15"
             style={{
               background:
@@ -297,7 +302,7 @@ function ItemsTab({
 
       <div className="js-list min-h-0 flex-1 overflow-y-auto py-1">
         {rows.length === 0 && (
-          <div className="p-8 text-center text-sm text-muted">No matches</div>
+          <div className="p-8 text-center text-sm text-muted">{ui('No matches')}</div>
         )}
         {rows.map((r) => {
           const selected =
@@ -346,14 +351,14 @@ function ItemsTab({
                 )}
               </span>
               <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-                {r.kindLabel}
+                {display(r.kindLabel)}
               </span>
               <span
                 className={`truncate text-[13px] font-medium ${
                   selected ? 'text-accent-hot' : 'text-text group-hover:text-accent-hot'
                 }`}
               >
-                {r.name}
+                {display(r.name)}
               </span>
               <span
                 className={`w-max rounded-[2px] border px-2 py-0.5 text-center font-mono text-[11px] font-semibold tracking-[0.06em] ${tierClass}`}
@@ -369,7 +374,7 @@ function ItemsTab({
                   r.stats === '—' ? 'italic text-faint tracking-[0.1em]' : 'text-muted'
                 }`}
               >
-                {r.stats}
+                {display(r.stats)}
               </span>
             </button>
           )
@@ -542,6 +547,8 @@ function UncutAffixCard({
   onChange: (patch: Partial<EquippedAffix>) => void
   onRemove: () => void
 }) {
+  const ui = useUiText()
+  const { display } = useGameTranslations()
   const def = getAffix(affix.affixId)
   if (!def) {
     return (
@@ -588,21 +595,21 @@ function UncutAffixCard({
         >
           {index}
         </span>
-        <span className="text-[13px] text-text">{def.description}</span>
+        <span className="text-[13px] text-text">{display(def.description)}</span>
         <span className="font-mono text-[11px] text-accent-hot">
           {rangeLabel}
         </span>
         <button
           onClick={onRemove}
           className="flex h-5 w-5 items-center justify-center rounded-[2px] border border-border-2 text-[12px] leading-none text-faint transition-colors hover:border-stat-red hover:text-stat-red"
-          aria-label="Remove affix"
+          aria-label={ui('Remove affix')}
         >
           ×
         </button>
       </div>
       <div className="mt-2.5 flex flex-wrap items-center gap-3 pl-[34px] font-mono text-[10px] tracking-[0.06em] text-faint">
         <label className="flex items-center gap-2">
-          <span>tier</span>
+          <span>{ui('tier')}</span>
           <Dropdown
             compact
             searchable={false}
@@ -622,7 +629,7 @@ function UncutAffixCard({
           />
         </label>
         <label className="flex items-center gap-2">
-          <span>roll</span>
+          <span>{ui('roll')}</span>
           <input
             type="number"
             min={min}

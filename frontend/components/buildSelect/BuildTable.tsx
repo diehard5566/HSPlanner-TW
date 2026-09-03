@@ -1,4 +1,5 @@
 import { motion } from 'motion/react'
+import { UiText } from '../../localization/LocalizedText'
 import { activeSeasonId, getClassIcon } from '@data'
 import { getSeason } from '@data/seasons/registry'
 import { listContainerVariants, listItemVariants } from '../../utils/motion'
@@ -201,7 +202,7 @@ export function BuildTable({
         <HeaderCell label="Name" col="name" sortCol={sortCol} sortDir={sortDir} onSort={onSort} />
         <HeaderCell label="Class" col="class" sortCol={sortCol} sortDir={sortDir} onSort={onSort} />
         <HeaderCell label="Lv" col="level" sortCol={sortCol} sortDir={sortDir} onSort={onSort} />
-        <span className="text-left text-faint">Season</span>
+        <span className="text-left text-faint"><UiText>Season</UiText></span>
         <HeaderCell label="Modified" col="date" sortCol={sortCol} sortDir={sortDir} onSort={onSort} />
       </div>
 
@@ -373,7 +374,7 @@ export function BuildTable({
                   Ctrl V
                 </kbd>{' '}
                 anywhere — imported builds land in{' '}
-                <b className="font-semibold text-text">Unfiled</b>.
+                <b className="font-semibold text-text"><UiText>Unfiled</UiText></b>.
               </p>
             </div>
           </div>

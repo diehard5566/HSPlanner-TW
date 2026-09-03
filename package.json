@@ -1,7 +1,7 @@
 {
   "name": "hsplanner",
   "private": true,
-  "version": "1.0.9",
+  "version": "1.0.10",
   "type": "module",
   "scripts": {
     "generate:i18n": "node tools/localization/generate-localization.mjs",
@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "release": "bash scripts/release.sh",
     "parity": "cd engine && cargo test --test parity",
     "parity:regen": "cd engine && cargo run --example dump_parity > tests/fixtures/parity.json.new && mv tests/fixtures/parity.json.new tests/fixtures/parity.json",
     "tauri": "tauri",

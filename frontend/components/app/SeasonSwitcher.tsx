@@ -10,8 +10,10 @@ import {
   Modal,
 } from "../ui/Modal";
 import Dropdown from "../ui/Dropdown";
+import { useUiText } from "../../localization/uiText";
 
 export default function SeasonSwitcher() {
+  const ui = useUiText();
   const [pending, setPending] = useState<string | null>(null);
   const pendingSeason = pending ? getSeason(pending) : undefined;
   const activeBuildId = useBuild((s) => s.activeBuildId);
@@ -28,7 +30,7 @@ export default function SeasonSwitcher() {
     <>
       <label data-tour="season" className="flex items-center gap-2">
         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
-          Season
+          {ui('Season')}
         </span>
         <Dropdown
           compact
@@ -50,14 +52,12 @@ export default function SeasonSwitcher() {
         >
           <section className="px-6 py-4">
             <p className="m-0 font-mono text-[12px] leading-relaxed tracking-[0.04em] text-muted">
-              {activeBuildId ? "This build will switch to " : "A new build will start in "}
+              {ui(activeBuildId ? "This build will switch to" : "A new build will start in")} {' '}
               <span className="text-accent-hot">{pendingSeason.name}</span>{" "}
-              and the app will reload.
+              {ui('and the app will reload.')}
             </p>
             <p className="m-0 mt-2 font-mono text-[12px] leading-relaxed tracking-[0.04em] text-muted">
-              Tree and Ether allocations are{" "}
-              <span className="text-accent-hot">reset</span> — gear and skills
-              carry over where they still exist in the target season.
+              {ui('Tree and Ether allocations are reset — gear and skills carry over where they still exist in the target season.')}
             </p>
           </section>
           <footer
@@ -74,7 +74,7 @@ export default function SeasonSwitcher() {
                   "linear-gradient(180deg, rgba(58,46,24,0.6), rgba(42,36,24,0.4))",
               }}
             >
-              Switch &amp; reload
+              {ui('Switch & reload')}
             </motion.button>
           </footer>
         </Modal>

@@ -6,8 +6,12 @@ import { normalizeSkillName } from '../../utils/item/stats'
 import type { Skill, SubskillNode } from '../../types'
 import { CountBadge, Panel } from './configPrimitives'
 import { itemProcRows } from './itemProcRows'
+import { useGameTranslations } from '../../localization/game'
+import { useUiText } from '../../localization/uiText'
 
 export default function ProcsPanel() {
+  const { display } = useGameTranslations()
+  const ui = useUiText()
   const classId = useBuild((s) => s.classId)
   const skillRanks = useBuild((s) => s.skillRanks)
   const procToggles = useBuild((s) => s.procToggles)
@@ -92,15 +96,15 @@ export default function ProcsPanel() {
     >
       {totalProcCount === 0 ? (
         <p className="font-mono text-[12px] tracking-[0.04em] text-muted italic">
-          {classId
+          {ui(classId
             ? 'No proc skills, subtree nodes or item procs available.'
-            : 'Pick a class first.'}
+            : 'Pick a class first.')}
         </p>
       ) : (
         <>
           <div className="mb-3 flex items-center justify-between gap-2">
             <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-              Kills / sec
+              {ui('Kills / sec')}
             </span>
             <div
               className="inline-flex w-20 shrink-0 items-center rounded-[3px] border border-border-2 px-2 py-1 transition-colors focus-within:border-accent-hot"
@@ -171,10 +175,10 @@ export default function ProcsPanel() {
                         <div
                           className={`truncate text-sm font-medium ${checked ? 'text-accent-hot' : 'text-text'}`}
                         >
-                          {p.name}
+                          {display(p.name)}
                         </div>
                         <div className="truncate font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-                          → {p.proc!.target}
+                          → {display(p.proc!.target)}
                           {!ready && ' · target not allocated'}
                         </div>
                       </span>
@@ -182,7 +186,7 @@ export default function ProcsPanel() {
                     <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-faint tabular-nums">
                       <span className="text-text">{p.proc!.chance}%</span>
                       {' · '}
-                      {p.proc!.trigger.replace('on_', '')}
+                      {ui(p.proc!.trigger.replace('on_', ''))}
                     </span>
                   </label>
                 </li>
@@ -299,10 +303,10 @@ export default function ProcsPanel() {
                             <div
                               className={`truncate text-sm font-medium ${checked ? 'text-accent-hot' : 'text-text'}`}
                             >
-                              {row.name}
+                              {display(row.name)}
                             </div>
                             <div className="truncate font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-                              rank {row.rankMin}
+                              {ui('rank')} {row.rankMin}
                               {row.rankMax !== row.rankMin && `–${row.rankMax}`}
                               {' · '}
                               {row.types.join(' + ')}

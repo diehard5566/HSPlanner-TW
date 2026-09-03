@@ -4,6 +4,7 @@ import fishGif from '../../assets/tutorial-fish.gif'
 import type { Section } from '../../App'
 import { useDialogA11y } from '../../hooks/useDialogA11y'
 import { writeStorage } from '../../utils/storage'
+import { useUiText } from '../../localization/uiText'
 import {
   CARD_HEIGHT_ESTIMATE,
   CARD_WIDTH,
@@ -35,6 +36,7 @@ export default function TutorialOverlay({
   setSection,
   onClose,
 }: TutorialOverlayProps) {
+  const ui = useUiText()
   const [index, setIndex] = useState(0)
   const [rect, setRect] = useState<TargetRect | null>(null)
   const [viewTick, setViewTick] = useState(0)
@@ -219,16 +221,16 @@ export default function TutorialOverlay({
             }}
           >
             <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-black/60">
-              Tutorial · {index + 1} / {TUTORIAL_STEPS.length}
+              {ui('Tutorial')} · {index + 1} / {TUTORIAL_STEPS.length}
             </div>
             <h2
               id={headingId}
               className="m-0 text-[15px] font-bold tracking-[-0.01em] text-black"
             >
-              {step.title}
+              {ui(step.title)}
             </h2>
             <p className="mb-0 mt-1.5 text-[12px] leading-relaxed text-black/70">
-              {step.body}
+              {ui(step.body)}
             </p>
             <div className="mt-3 flex items-center gap-2">
               <button
@@ -237,14 +239,14 @@ export default function TutorialOverlay({
                 disabled={index === 0}
                 className={COMIC_BTN_CLASS}
               >
-                Back
+                {ui('Back')}
               </button>
               <button
                 type="button"
                 onClick={() => (isLast ? close() : setIndex(index + 1))}
                 className={COMIC_BTN_PRIMARY_CLASS}
               >
-                {isLast ? 'Finish' : 'Next'}
+                {ui(isLast ? 'Finish' : 'Next')}
               </button>
             </div>
             <button

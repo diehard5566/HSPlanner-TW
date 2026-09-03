@@ -19,6 +19,7 @@ import { tierLabel, tierTone, type TreeNode } from './treeData'
 import { JewelrySocketSection } from './JewelrySocketSection'
 import { useI18n } from '../../localization/i18n'
 import { useGameTranslations } from '../../localization/game'
+import { UiText } from '../../localization/LocalizedText'
 
 export function NodeTooltip({
   node,
@@ -313,7 +314,7 @@ export function NodeTooltip({
       {!info && (
         <TooltipSection>
           <TooltipText>
-            <span className="text-faint">No data available</span>
+            <span className="text-faint"><UiText>No data available</UiText></span>
           </TooltipText>
         </TooltipSection>
       )}

@@ -7,6 +7,8 @@ import type { SlotKey } from '../../types'
 import { charmBlockedCells, CHARM_GRID_COLS, CHARM_GRID_ROWS, packCharms } from './lib/charmPacking'
 import { RARITY_BG, RARITY_TEXT } from './lib/rarity'
 import { GearPanel } from './SlotRail'
+import { useGameTranslations } from '../../localization/game'
+import { useUiText } from '../../localization/uiText'
 
 export function CharmSection({
   charmSlots,
@@ -17,6 +19,8 @@ export function CharmSection({
   activeSlot: SlotKey | null
   onSelect: (s: SlotKey) => void
 }) {
+  const { display } = useGameTranslations()
+  const ui = useUiText()
   const inventory = useBuild((s) => s.inventory)
   const extraCharmSlot = useSettings((s) => s.extraCharmSlot)
   const blockedCells = useMemo(
@@ -100,7 +104,7 @@ export function CharmSection({
             key={`blocked-${r}-${c}`}
             style={{ gridColumn: c + 1, gridRow: r + 1 }}
             className="rounded border border-dashed border-[#3a2a18] bg-[#070403] opacity-60"
-            aria-label="Blocked"
+            aria-label={ui('Blocked')}
           />
         ))}
 
@@ -118,7 +122,7 @@ export function CharmSection({
             <button
               type="button"
               onClick={() => onSelect(p.slotKey)}
-              aria-label={base.name}
+              aria-label={display(base.name)}
               className={`relative w-full h-full rounded-[3px] text-[10px] flex flex-col items-center justify-center text-center transition-colors overflow-hidden ${
                 isActive
                   ? 'border-2 border-accent bg-accent/10 ring-1 ring-accent'
@@ -145,7 +149,7 @@ export function CharmSection({
                       overflow: 'hidden',
                     }}
                   >
-                    {base.name}
+                    {display(base.name)}
                   </div>
                 </>
               )}
@@ -182,7 +186,7 @@ export function CharmSection({
             disabled={!nextEmptySlotKey}
             style={{ gridColumn: col + 1, gridRow: row + 1 }}
             className="rounded-[3px] text-[10px] flex items-center justify-center border border-[#5a4528] bg-[#120c08] hover:border-accent-deep text-transparent hover:text-accent/40 cursor-pointer disabled:cursor-not-allowed"
-            aria-label="Empty charm slot"
+            aria-label={ui('Empty charm slot')}
           >
             <span className="text-lg">+</span>
           </button>

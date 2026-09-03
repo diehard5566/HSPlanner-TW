@@ -2,6 +2,7 @@ import { computeEhp, formatEhp, type DamageType } from '../../utils/build/ehp'
 import { rangedMax } from '../../utils/item/stats'
 import type { RangedValue } from '../../types'
 import { BDLine, BDSection } from './statPrimitives'
+import { useUiText } from '../../localization/uiText'
 
 interface EhpBreakdownProps {
   stats: Record<string, RangedValue>
@@ -22,13 +23,14 @@ function capitalize(s: string): string {
 }
 
 export function EhpBreakdown({ stats, statsCombined }: EhpBreakdownProps) {
+  const ui = useUiText()
   const merged = { ...stats, ...statsCombined }
   const { entries, worst } = computeEhp(merged)
 
   if (entries.length === 0) {
     return (
       <div className="py-2 text-center text-xs text-muted italic">
-        Add life and defenses to see effective HP.
+        {ui('Add life and defenses to see effective HP.')}
       </div>
     )
   }
@@ -56,8 +58,8 @@ export function EhpBreakdown({ stats, statsCombined }: EhpBreakdownProps) {
                 titleClass={TYPE_COLOR[entry.type]}
                 title={
                   weakest
-                    ? `${capitalize(entry.type)} · weakest`
-                    : capitalize(entry.type)
+                    ? ui(`${capitalize(entry.type)} · weakest`)
+                    : ui(capitalize(entry.type))
                 }
               >
                 <BDLine

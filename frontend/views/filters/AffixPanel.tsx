@@ -10,6 +10,7 @@ import {
 import type { ApplyFilter } from './FilterEditor'
 import { FILTER_BTN_CLASS, FILTER_CHIP_CLASS, FilterCell } from './FilterCells'
 import type { CellState } from './filterModel'
+import { useGameTranslations } from '../../localization/game'
 import {
   isAffixRowEdited,
   setAffixesVisible,
@@ -221,6 +222,7 @@ const AffixRow = memo(function AffixRow({
   onToggleRow: (statId: number) => void
   onCell: (statId: number, tier: number, highlight: boolean) => void
 }) {
+  const { display } = useGameTranslations()
   const edited = /[hH]/.test(states)
   return (
     <div className="flex break-inside-avoid items-center justify-between gap-2 py-[2px]">
@@ -232,7 +234,7 @@ const AffixRow = memo(function AffixRow({
           edited ? 'text-text' : 'text-muted'
         }`}
       >
-        {stat.name}
+        {display(stat.name)}
       </button>
       <div className="flex gap-[3px]">
         {TIER_LABELS.map((t, tier) => (

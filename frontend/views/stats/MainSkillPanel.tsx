@@ -19,6 +19,7 @@ import { BDLine, BDSection, HeroStat, Panel } from './statPrimitives'
 import { DamageBreakdown } from './DamageBreakdown'
 import { AttackDamageBreakdown } from './AttackDamageBreakdown'
 import { useGameTranslations } from '../../localization/game'
+import { useUiText } from '../../localization/uiText'
 
 export function MainSkillSection({
   mainSkill,
@@ -127,6 +128,7 @@ function AttackSkillHero({
   skill: Skill
   breakdown: AttackSkillDamageBreakdown
 }) {
+  const ui = useUiText()
   const formatRangeInt = useFormatRangeInt()
   const b = breakdown
   const subskillRanks = useBuild((s) => s.subskillRanks)
@@ -142,7 +144,7 @@ function AttackSkillHero({
     >
       <div className="border-b border-border px-4 py-3.5 md:border-b-0 md:border-r">
         <div className="mb-1.5 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-faint">
-          <span>Average Hit</span>
+          <span>{ui('Average Hit')}</span>
           {skill.damageType && (
             <span
               className={`rounded-xs border px-1.5 py-px text-[9px] font-semibold ${DAMAGE_COLORS[skill.damageType].pill}`}

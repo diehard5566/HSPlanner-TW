@@ -8,6 +8,8 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import { useOutsideClick } from '../../hooks/useOutsideClick'
+import { useGameTranslations } from '../../localization/game'
+import { useUiText } from '../../localization/uiText'
 
 export interface DropdownOption {
   id: string
@@ -57,6 +59,8 @@ export default function Dropdown({
   searchable = true,
   compact = false,
 }: DropdownProps) {
+  const { display } = useGameTranslations()
+  const ui = useUiText()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [kb, setKb] = useState(0)
@@ -181,7 +185,7 @@ export default function Dropdown({
         }}
       >
         <span className={`hs-dd-trigger-label${selected ? '' : ' is-empty'}`}>
-          {selected?.label ?? placeholder}
+          {selected ? display(selected.label) : ui(placeholder)}
         </span>
         <span className="hs-dd-chev" aria-hidden />
       </button>
@@ -228,7 +232,7 @@ export default function Dropdown({
                     setQuery(e.target.value)
                     setKb(0)
                   }}
-                  placeholder={searchPlaceholder}
+                  placeholder={ui(searchPlaceholder)}
                 />
               </div>
             )}
@@ -248,11 +252,11 @@ export default function Dropdown({
                     onHoverChange?.(null)
                   }}
                 >
-                  <div className="hs-dd-item-name">{clearLabel}</div>
+                  <div className="hs-dd-item-name">{clearLabel ? ui(clearLabel) : clearLabel}</div>
                 </div>
               )}
               {filtered.length === 0 ? (
-                <div className="hs-dd-empty">{emptyLabel}</div>
+                <div className="hs-dd-empty">{ui(emptyLabel)}</div>
               ) : (
                 filtered.map((o, i) => {
                   const idx = showClear ? i + 1 : i
@@ -271,7 +275,7 @@ export default function Dropdown({
                         onHoverChange?.(o.id)
                       }}
                     >
-                      <div className="hs-dd-item-name">{o.label}</div>
+                      <div className="hs-dd-item-name">{display(o.label)}</div>
                       {o.meta != null && (
                         <div className="hs-dd-item-meta">{o.meta}</div>
                       )}

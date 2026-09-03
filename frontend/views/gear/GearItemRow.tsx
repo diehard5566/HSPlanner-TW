@@ -4,6 +4,7 @@ import Tooltip from '../../components/ui/Tooltip'
 import type { PickerRow } from './PickerModal'
 import { gemTintForRarity } from './lib/gearIcons'
 import { RARITY_TEXT } from './lib/rarity'
+import { useGameTranslations } from '../../localization/game'
 
 export function GearItemRow({
   row,
@@ -18,6 +19,7 @@ export function GearItemRow({
   onHover: () => void
   sortBadge?: string | null
 }) {
+  const { display } = useGameTranslations()
   const rarity = row.rarity
   const nameColor = rarity ? RARITY_TEXT[rarity] : 'text-text'
 
@@ -62,7 +64,7 @@ export function GearItemRow({
         )}
       </span>
       <span className={`truncate text-[12px] font-medium ${nameColor}`}>
-        {row.name}
+        {display(row.name)}
       </span>
       {sortBadge != null && (
         <span className="shrink-0 rounded-[2px] border border-accent-deep/40 bg-accent-deep/10 px-1.5 py-0.5 text-right font-mono text-[10px] font-semibold tabular-nums text-accent-hot">
@@ -70,7 +72,7 @@ export function GearItemRow({
         </span>
       )}
       <span className="truncate font-mono text-[9px] tracking-[0.04em] text-muted/80 max-w-45">
-        {typeof row.meta === 'string' ? row.meta : ''}
+        {typeof row.meta === 'string' ? display(row.meta) : ''}
       </span>
     </button>
   )

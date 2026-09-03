@@ -27,6 +27,8 @@ import { RandomSkillSection } from './sections/RandomSkillSection'
 import { RollsSection } from './sections/RollsSection'
 import { RARITY_LABEL, RARITY_TEXT } from './lib/rarity'
 import { useGearDraft } from './lib/useGearDraft'
+import { useUiText } from '../../localization/uiText'
+import { useGameTranslations } from '../../localization/game'
 
 const GHOST_BTN =
   'rounded-md border border-border bg-transparent px-3 py-1.5 text-[12px] text-muted transition-colors hover:border-accent-deep hover:text-accent-hot'
@@ -60,6 +62,8 @@ export function GearSlotModal({
   inventory,
   hideCompare = false,
 }: GearSlotModalProps) {
+  const ui = useUiText()
+  const { game, display } = useGameTranslations()
   const storeInventory = useBuild((s) => s.inventory)
   const inv = inventory ?? storeInventory
   const dpsPreviewEnabled = inventory == null
@@ -209,10 +213,10 @@ export function GearSlotModal({
                   <div
                     className={`truncate text-[14px] font-semibold ${RARITY_TEXT[base.rarity]}`}
                   >
-                    {base.name}
+                    {game('item', { fallback: base.name })}
                   </div>
                   <div className="text-[11px] text-muted">
-                    {RARITY_LABEL[base.rarity]}
+                    {display(RARITY_LABEL[base.rarity])}
                   </div>
                 </div>
                 <button
@@ -220,14 +224,14 @@ export function GearSlotModal({
                   onClick={() => setStep('select')}
                   className={`shrink-0 ${GHOST_BTN}`}
                 >
-                  ← Change item
+                  ← {ui('Change item')}
                 </button>
               </div>
 
               <div key={draft.baseId} className="space-y-4 p-5">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
-                    ◆ Configure
+                    ◆ {ui('Configure')}
                   </span>
                   <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
                     <button
@@ -238,7 +242,7 @@ export function GearSlotModal({
                       }}
                       className="text-muted transition-colors hover:text-accent-hot"
                     >
-                      Expand all
+                      {ui('Expand all')}
                     </button>
                     <span className="text-faint/50">|</span>
                     <button
@@ -249,7 +253,7 @@ export function GearSlotModal({
                       }}
                       className="text-muted transition-colors hover:text-accent-hot"
                     >
-                      Collapse all
+                      {ui('Collapse all')}
                     </button>
                   </div>
                 </div>
@@ -341,10 +345,10 @@ export function GearSlotModal({
             <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 p-8 text-center">
               <div>
                 <div className="mb-1.5 text-[14px] font-semibold text-text">
-                  No item selected
+                  {ui('No item selected')}
                 </div>
                 <div className="text-[12px] text-muted">
-                  This slot will be emptied when you Save.
+                  {ui('This slot will be emptied when you Save.')}
                 </div>
               </div>
               <button
@@ -352,7 +356,7 @@ export function GearSlotModal({
                 onClick={() => setStep('select')}
                 className="rounded-md border border-accent-deep bg-accent-hot/10 px-4 py-2 text-[12px] font-medium text-accent-hot transition-colors hover:border-accent-hot hover:bg-accent-hot/15"
               >
-                Choose an item
+                {ui('Choose an item')}
               </button>
             </div>
           )}
@@ -393,7 +397,7 @@ export function GearSlotModal({
                   onClick={() => setTextEditorOpen(true)}
                   className={GHOST_BTN}
                 >
-                  Edit Text
+                  {ui('Edit Text')}
                 </button>
               )}
               <button
@@ -401,7 +405,7 @@ export function GearSlotModal({
                 onClick={() => d.clearDraft()}
                 className={GHOST_BTN_RED}
               >
-                Remove
+                {ui('Remove')}
               </button>
             </>
           ) : null
@@ -418,7 +422,7 @@ export function GearSlotModal({
         {confirmingClose && (
           <div className="flex items-center justify-between gap-3 border-t border-amber-500/30 bg-amber-500/8 px-5 py-3">
             <span className="text-[12px] text-amber-200">
-              You have unsaved changes
+              {ui('You have unsaved changes')}
             </span>
             <div className="flex shrink-0 gap-2">
               <button
@@ -426,17 +430,17 @@ export function GearSlotModal({
                 onClick={() => setConfirmingClose(false)}
                 className={GHOST_BTN}
               >
-                Keep Editing
+                {ui('Keep Editing')}
               </button>
               <button type="button" onClick={onClose} className={GHOST_BTN_RED}>
-                Discard
+                {ui('Discard')}
               </button>
               <button
                 type="button"
                 onClick={handleSave}
                 className="rounded-md border border-accent-deep bg-accent-hot/10 px-3 py-1.5 text-[12px] font-medium text-accent-hot transition-colors hover:border-accent-hot hover:bg-accent-hot/15"
               >
-                Save
+                {ui('Save')}
               </button>
             </div>
           </div>
@@ -454,10 +458,10 @@ export function GearSlotModal({
                 background: draft ? 'var(--color-accent)' : 'var(--color-faint)',
               }}
             />
-            <span className="truncate">{footerLabel}</span>
+            <span className="truncate">{display(footerLabel)}</span>
             {dirty && (
               <span className="ml-2 rounded border border-amber-400/40 px-1.5 py-0.5 text-[10px] text-amber-300">
-                Unsaved
+                {ui('Unsaved')}
               </span>
             )}
           </div>
@@ -478,7 +482,7 @@ export function GearSlotModal({
                 disabled={!dirty}
                 className={PRIMARY_BTN}
               >
-                Save / Equip
+                {ui('Save / Equip')}
               </button>
             )}
           </div>
@@ -506,16 +510,18 @@ function SetSummary({
   count: number
   equipped: ReadonlySet<string>
 }) {
+  const ui = useUiText()
+  const { display } = useGameTranslations()
   return (
     <SectionCard
-      label={set.name}
+      label={display(set.name)}
       tone="set"
       icon={<SectionIcon kind="set" />}
       collapsible
       defaultOpen={count >= 2}
       rightSlot={
         <span className="font-mono text-[10px] tabular-nums text-green-300/80">
-          {count}/{set.items.length} pieces
+          {ui(`${count}/${set.items.length} pieces`)}
         </span>
       }
       bodyClassName="px-3.5 py-2.5"
@@ -534,7 +540,7 @@ function SetSummary({
                     active ? 'text-green-300' : 'text-faint'
                   }`}
                 >
-                  {bonus.pieces}-Set
+                  {ui(`${bonus.pieces}-Set`)}
                 </span>
                 {active && (
                   <span className="font-mono text-[10px] text-green-300">✓</span>
@@ -547,7 +553,7 @@ function SetSummary({
                     active ? 'text-green-200/90' : 'text-muted/55'
                   }`}
                 >
-                  {dsc}
+                  {display(dsc)}
                 </div>
               ))}
             </li>
@@ -556,7 +562,7 @@ function SetSummary({
       </ul>
       <div className="mt-2.5 border-t border-white/5 pt-2">
         <div className="font-mono text-[9px] uppercase tracking-[0.14em] text-faint">
-          Set items
+          {ui('Set items')}
         </div>
         <ul className="ml-3 mt-1 space-y-0.5">
           {set.items.map((piece) => {
@@ -566,7 +572,7 @@ function SetSummary({
                 key={piece.itemId}
                 className={`text-[10.5px] leading-snug ${worn ? 'text-green-200' : 'text-muted/60'}`}
               >
-                <span className="font-mono">{worn ? '✓' : '·'}</span> {piece.name} ({piece.slot})
+                <span className="font-mono">{worn ? '✓' : '·'}</span> {display(piece.name)} ({display(piece.slot)})
               </li>
             )
           })}

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useUiText } from '../../localization/uiText'
 
 interface IconActionProps {
   label: string
@@ -17,6 +18,7 @@ export function IconAction({
   onClick,
   children,
 }: IconActionProps) {
+  const ui = useUiText()
   const tone = danger
     ? 'hover:bg-stat-red/10 hover:text-stat-red'
     : 'hover:bg-accent-hot/10 hover:text-accent-hot'
@@ -25,8 +27,8 @@ export function IconAction({
     <button
       type="button"
       disabled={disabled}
-      title={label}
-      aria-label={label}
+      title={ui(label)}
+      aria-label={ui(label)}
       onClick={onClick}
       className={`flex h-[24px] w-[24px] items-center justify-center rounded-[2px] transition-colors disabled:cursor-not-allowed disabled:opacity-25 ${
         active ? activeTone : 'text-faint'

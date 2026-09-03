@@ -4,8 +4,10 @@ import { resolveSkillIcon, skills } from '@data'
 import { useBuild } from '../../store/build'
 import { effectiveSkillTags } from '../../utils/skills/skillTags'
 import { CountBadge, Panel } from './configPrimitives'
+import { useGameTranslations } from '../../localization/game'
 
 export default function SkillProjectilesPanel() {
+  const { game } = useGameTranslations()
   const classId = useBuild((s) => s.classId)
   const skillRanks = useBuild((s) => s.skillRanks)
   const subskillRanks = useBuild((s) => s.subskillRanks)
@@ -76,7 +78,7 @@ export default function SkillProjectilesPanel() {
                     <div
                       className={`truncate text-sm font-medium ${value > 1 ? 'text-accent-hot' : 'text-text'}`}
                     >
-                      {s.name}
+                      {game('talent', { fallback: s.name })}
                     </div>
                   </span>
                 </span>

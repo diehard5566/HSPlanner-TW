@@ -44,6 +44,8 @@ import SkillsView from "./views/SkillsView";
 import StatsView from "./views/StatsView";
 import TreeView from "./views/TreeView";
 import { useI18n, type UiKey } from "./localization/i18n";
+import { useGameTranslations } from "./localization/game";
+import { useUiText } from "./localization/uiText";
 
 declare global {
   interface Window {
@@ -81,6 +83,8 @@ function readInitialSection(): Section {
 
 function App() {
   const { locale, t } = useI18n();
+  const { game } = useGameTranslations();
+  const ui = useUiText();
   const [section, setSection] = useState<Section>(readInitialSection);
   const [screen, setScreen] = useState<Screen>("library");
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -362,7 +366,7 @@ function App() {
                   className="inline-block h-1 w-1 rotate-45 bg-accent-hot"
                   style={{ boxShadow: "0 0 6px rgba(224,184,100,0.6)" }}
                 />
-                {cls.primaryAttribute}
+                {game('attribute', { fallback: cls.primaryAttribute })}
               </span>
             )}
             <SeasonSwitcher />
@@ -372,8 +376,8 @@ function App() {
             <button
               type="button"
               onClick={() => setTutorialOpen(true)}
-              title="Tutorial"
-              aria-label="Open tutorial"
+              title={ui('Tutorial')}
+              aria-label={ui('Open tutorial')}
               className="rounded-[3px] border border-border-2 px-2.5 py-1 font-mono text-[12px] leading-[1.35] text-muted transition-colors hover:border-accent-deep hover:text-accent-hot"
             >
               ?
@@ -381,8 +385,8 @@ function App() {
             <button
               type="button"
               onClick={() => setSettingsOpen(true)}
-              title="Settings"
-              aria-label="Settings"
+              title={ui('Settings')}
+              aria-label={ui('Settings')}
               data-tour="settings"
               className="rounded-[3px] border border-border-2 p-1.5 text-muted transition-colors hover:border-accent-deep hover:text-accent-hot"
             >

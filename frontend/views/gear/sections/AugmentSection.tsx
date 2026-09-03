@@ -10,6 +10,8 @@ import { useHoverDpsDiff } from '../lib/useHoverDpsDiff'
 import { augmentIconForId } from '../lib/gearIcons'
 import { SectionCard } from '../SectionCard'
 import { SectionIcon } from '../sectionIcons'
+import { useGameTranslations } from '../../../localization/game'
+import { useUiText } from '../../../localization/uiText'
 
 const AUGMENT_PICKER_ROWS: PickerRow[] = augments
   .slice()
@@ -77,6 +79,8 @@ export function AugmentSection({
   onSetAugmentLevel: (level: number) => void
   dpsPreviewEnabled?: boolean
 }) {
+  const { display } = useGameTranslations()
+  const ui = useUiText()
   const [pickerOpen, setPickerOpen] = useState(false)
   const aug = equipped.augment ? getAugment(equipped.augment.id) : undefined
   const level = equipped.augment?.level ?? 1
@@ -103,14 +107,14 @@ export function AugmentSection({
         aug ? (
           <>
             <span className="max-w-[220px] truncate font-mono text-[10px] uppercase tracking-[0.06em] text-yellow-200/80">
-              {aug.name} · Lv {level}
+              {display(aug.name)} · Lv {level}
             </span>
             <button
               onClick={() => onSetAugment(null)}
               className="rounded-xs border border-border-2 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-faint transition-colors hover:border-stat-red hover:text-stat-red"
               aria-label="Remove augment"
             >
-              Remove
+              {ui('Remove')}
             </button>
           </>
         ) : undefined
@@ -141,11 +145,11 @@ export function AugmentSection({
               aug ? 'text-yellow-200' : 'text-faint italic'
             }`}
           >
-            {aug ? aug.name : 'Choose augment…'}
+            {aug ? display(aug.name) : ui('Choose augment…')}
           </span>
         </span>
         <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint group-hover:text-yellow-200">
-          Browse →
+          {ui('Browse')} →
         </span>
       </button>
 
@@ -196,12 +200,12 @@ export function AugmentSection({
           </div>
 
           <p className="text-[11px] leading-snug text-text/85">
-            {aug.description}
+            {display(aug.description)}
           </p>
 
           <div className="flex flex-wrap gap-1.5">
             <span className="rounded-xs border border-yellow-200/25 bg-bg/40 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-yellow-200/80">
-              {aug.triggerNote}
+              {display(aug.triggerNote)}
             </span>
             {tier.procChance !== undefined && tier.procChance !== null && (
               <span className="rounded-xs border border-yellow-200/25 bg-bg/40 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-yellow-200/80">

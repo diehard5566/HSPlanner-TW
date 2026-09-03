@@ -1,6 +1,8 @@
 import type { BuildStatDiff } from '../utils/build/buildPerformance'
+import { useGameTranslations } from '../localization/game'
 
 export default function NetChangeRow({ diff }: { diff: BuildStatDiff }) {
+  const { display } = useGameTranslations()
   const fmtScalar = (v: number) => {
     if (diff.isPercent) {
       const rounded =
@@ -38,7 +40,7 @@ export default function NetChangeRow({ diff }: { diff: BuildStatDiff }) {
       className="grid items-center gap-2 px-1 py-0.5 font-mono text-[11px] break-inside-avoid"
       style={{ gridTemplateColumns: '1fr auto auto auto auto' }}
     >
-      <span className="font-sans text-[12px] text-text/85">{diff.label}</span>
+      <span className="font-sans text-[12px] text-text/85">{display(diff.label)}</span>
       <span className="text-right tabular-nums text-faint">
         {fmtRange(diff.beforeMin, diff.beforeMax)}
       </span>

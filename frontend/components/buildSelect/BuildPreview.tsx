@@ -15,6 +15,8 @@ import { usePreviewStats } from './usePreviewStats'
 import { CopyIcon, DeleteIcon, PlayIcon, PlusIcon, RenameIcon } from './buildSelectIcons'
 import { IconAction } from '../ui/IconAction'
 import { formatEhp, groupEhpRows } from '../../utils/build/ehp'
+import { useUiText } from '../../localization/uiText'
+import { useGameTranslations } from '../../localization/game'
 
 interface BuildPreviewProps {
   build: SavedBuild | null
@@ -46,10 +48,11 @@ function StatTile({
   value: string
   tone?: string
 }) {
+  const { display } = useGameTranslations()
   return (
     <div className="flex min-w-0 flex-col gap-1 bg-panel px-3 py-2">
       <span className="truncate font-mono text-[9.5px] uppercase tracking-[0.1em] text-faint">
-        {label}
+        {display(label)}
       </span>
       <span
         className={`truncate font-mono text-[13px] font-medium tabular-nums ${tone ?? 'text-text'}`}
@@ -69,10 +72,11 @@ function Section({
   count?: number
   children: React.ReactNode
 }) {
+  const ui = useUiText()
   return (
     <div className="border-b border-border py-3.5 last:border-b-0">
       <h5 className="m-0 mb-2 flex items-center justify-between font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-faint">
-        <span>{title}</span>
+        <span>{ui(title)}</span>
         {count !== undefined && (
           <span className="text-accent-deep">· {count}</span>
         )}

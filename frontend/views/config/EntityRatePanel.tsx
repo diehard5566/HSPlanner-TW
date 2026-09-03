@@ -9,6 +9,7 @@ import {
   type EntityKind,
 } from '../../utils/build/entityRates'
 import { Panel } from './configPrimitives'
+import { useUiText } from '../../localization/uiText'
 
 const KIND_LABEL: Record<EntityKind, string> = {
   sentry: 'Sentry',
@@ -63,10 +64,11 @@ function RateRow({
   value: number
   onChange: (rate: number) => void
 }) {
+  const ui = useUiText()
   return (
     <div className="flex items-center justify-between gap-2">
       <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-faint">
-        {label} / sec
+        {ui(label)} / {ui('sec')}
       </span>
       <div
         className="inline-flex w-20 shrink-0 items-center rounded-[3px] border border-border-2 px-2 py-1 transition-colors focus-within:border-accent-hot"

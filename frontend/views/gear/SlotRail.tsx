@@ -4,6 +4,7 @@ import { detectRuneword, effectiveStars, getItem, getItemImage } from '@data'
 import type { EquippedItem, SlotKey } from '../../types'
 import { RARITY_BG, RARITY_BORDER, RARITY_TEXT } from './lib/rarity'
 import { useGameTranslations } from '../../localization/game'
+import { UiText } from '../../localization/LocalizedText'
 
 export function SlotRow({
   slot,
@@ -115,7 +116,7 @@ export function SlotRow({
             locked · 2H weapon equipped
           </span>
         ) : (
-          <span className="block text-[11px] text-faint italic">empty</span>
+          <span className="block text-[11px] text-faint italic"><UiText>empty</UiText></span>
         )}
       </span>
       {badges.length > 0 && (
@@ -175,4 +176,3 @@ export function GearPanel({
     </section>
   )
 }
-

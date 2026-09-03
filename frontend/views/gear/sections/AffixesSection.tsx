@@ -32,6 +32,7 @@ import {
 import { displayValuesNative } from '../../../utils/calc/bridge'
 import type { AffixValueOutput } from '../../../utils/calc/bridge'
 import type { Affix, EquippedItem, ItemBase } from '../../../types'
+import { useGameTranslations } from '../../../localization/game'
 import { buildAffixGroupTooltip, buildAffixTooltip } from '../tooltips'
 import { SectionCard } from '../SectionCard'
 import { SectionIcon } from '../sectionIcons'
@@ -159,6 +160,7 @@ export function AffixesSection({
   onRemove: (index: number) => void
   onSetRoll?: (index: number, roll: number, affixId?: string) => void
 }) {
+  const { display } = useGameTranslations()
   const [open, setOpen] = useState(false)
   const [showAllAffixes, setShowAllAffixes] = useState(false)
   const atCap =
@@ -308,9 +310,9 @@ export function AffixesSection({
                         : formatAffixRangeFromValues(affix, range)}
                   </span>
                   <span className="truncate text-text/85">
-                    {statLabel}
+                    {display(statLabel)}
                     {statLabel.toLowerCase().includes(affix.name.toLowerCase()) ? null : (
-                      <span className="text-faint"> ({affix.name})</span>
+                      <span className="text-faint"> ({display(affix.name)})</span>
                     )}
                   </span>
                   <span className="rounded-xs border border-accent-deep/40 px-1 py-px font-mono text-[9px] tabular-nums text-accent-hot/75">
@@ -321,7 +323,7 @@ export function AffixesSection({
                       className="rounded-xs border border-accent-hot/60 px-1 py-px font-mono text-[9px] tabular-nums text-accent-hot"
                       title="Custom value override"
                     >
-                      custom
+                      {display('Custom')}
                     </span>
                   )}
                 </span>

@@ -19,6 +19,7 @@ import {
   type UpdateInfo,
 } from '../../utils/version'
 import UpdateModal from './UpdateModal'
+import { useUiText } from '../../localization/uiText'
 
 const AUTO_INSTALL_KEY = 'hsplanner.update.auto_install'
 
@@ -30,6 +31,7 @@ type CheckState =
   | { kind: 'error'; message: string }
 
 export default function BottomBar() {
+  const ui = useUiText()
   const [check, setCheck] = useState<CheckState>({ kind: 'idle' })
   const [modalOpen, setModalOpen] = useState(false)
   const [changelogOpen, setChangelogOpen] = useState(false)
@@ -173,7 +175,7 @@ export default function BottomBar() {
       <button
         type="button"
         onClick={() => setChangelogOpen(true)}
-        title="View changelog"
+        title={ui('View changelog')}
         className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-faint transition-colors hover:text-accent-hot"
       >
         v{APP_VERSION}
@@ -213,7 +215,7 @@ export default function BottomBar() {
         href="https://ko-fi.com/zium1337"
         target="_blank"
         rel="noopener noreferrer"
-        title="Support HSPlanner on Ko-fi"
+        title={ui('Support HSPlanner on Ko-fi')}
         onClick={(e) => openExternalLink(e, 'https://ko-fi.com/zium1337')}
         className="inline-flex items-center gap-1.5 rounded-[3px] border border-accent-deep px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-accent-hot transition-colors hover:border-accent-hot hover:text-[#fff0c4]"
         style={{
@@ -222,7 +224,7 @@ export default function BottomBar() {
         }}
       >
         <KofiIcon className="h-3 w-3" />
-        Support on Ko-fi
+        {ui('Support on Ko-fi')}
       </a>
       <span aria-hidden className="h-4 w-px bg-border" />
       <SaveBadge />
@@ -236,6 +238,7 @@ const SAVE_SHORTCUT = IS_MAC ? '⌘S' : 'Ctrl+S'
 const SAVED_FLASH_MS = 1600
 
 function SaveBadge() {
+  const ui = useUiText()
   const autoSave = useSettings((s) => s.autoSave)
   const savedBuildsVersion = useBuild((s) => s.savedBuildsVersion)
   const [flash, setFlash] = useState(false)
@@ -257,7 +260,7 @@ function SaveBadge() {
           className="h-1.5 w-1.5 rounded-full bg-stat-green"
           style={{ boxShadow: '0 0 8px rgba(116,201,138,0.65)' }}
         />
-        Auto-saved
+        {ui('Auto-saved')}
       </span>
     )
   }
@@ -270,7 +273,7 @@ function SaveBadge() {
           className="h-1.5 w-1.5 rounded-full bg-stat-green"
           style={{ boxShadow: '0 0 8px rgba(116,201,138,0.65)' }}
         />
-        Saved
+        {ui('Saved')}
       </span>
     )
   }
@@ -285,7 +288,7 @@ function SaveBadge() {
         className="h-1.5 w-1.5 rounded-full bg-accent-hot"
         style={{ boxShadow: '0 0 8px rgba(224,184,100,0.65)' }}
       />
-      Manual · {SAVE_SHORTCUT}
+      {ui('Manual')} · {SAVE_SHORTCUT}
     </span>
   )
 }
@@ -301,6 +304,7 @@ function UpdateBadge({
   onCheck: () => void
   onOpenModal: () => void
 }) {
+  const ui = useUiText()
   if (!hasRepo) {
     return (
       <button
@@ -309,7 +313,7 @@ function UpdateBadge({
         title="Set GITHUB_REPO in src/utils/version.ts to enable update checks"
         className="cursor-not-allowed rounded-[3px] border border-border bg-panel-2/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-faint"
       >
-        Check for updates
+        {ui('Check for updates')}
       </button>
     )
   }
@@ -321,7 +325,7 @@ function UpdateBadge({
           aria-hidden
           className="inline-block h-1 w-1 animate-pulse rotate-45 bg-faint"
         />
-        Checking…
+        {ui('Checking…')}
       </span>
     )
   }
@@ -334,7 +338,7 @@ function UpdateBadge({
           className="h-1.5 w-1.5 rounded-full bg-stat-green"
           style={{ boxShadow: '0 0 6px rgba(116,201,138,0.6)' }}
         />
-        Up to date
+        {ui('Up to date')}
       </span>
     )
   }

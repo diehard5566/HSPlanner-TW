@@ -1,6 +1,7 @@
 import { MAX_STARS } from '../../../store/build'
 import { SectionCard } from '../SectionCard'
 import { SectionIcon } from '../sectionIcons'
+import { useUiText } from '../../../localization/uiText'
 
 export function StarsSection({
   stars,
@@ -9,6 +10,7 @@ export function StarsSection({
   stars: number
   onChange: (n: number) => void
 }) {
+  const ui = useUiText()
   const bonusPct = stars * 8
   return (
     <SectionCard
@@ -27,12 +29,12 @@ export function StarsSection({
               onClick={() => onChange(0)}
               className="rounded-xs border border-border-2 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-faint transition-colors hover:border-stat-red hover:text-stat-red"
             >
-              Clear
+              {ui('Clear')}
             </button>
           </>
         ) : (
           <span className="font-mono text-[10px] tabular-nums tracking-[0.04em] text-faint">
-            no bonus
+            {ui('no bonus')}
           </span>
         )
       }
@@ -72,8 +74,7 @@ export function StarsSection({
         )}
       </div>
       <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] leading-snug text-faint">
-        +8% per star to user-added affixes — runeword & "+X to all skills" mods
-        excluded.
+        {ui('+8% per star to user-added affixes — runeword & "+X to all skills" mods excluded.')}
       </p>
     </SectionCard>
   )

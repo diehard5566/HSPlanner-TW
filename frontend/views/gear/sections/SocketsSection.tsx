@@ -9,6 +9,8 @@ import { withSocketed } from '../lib/itemEdits'
 import { useHoverDpsDiff } from '../lib/useHoverDpsDiff'
 import { SectionCard } from '../SectionCard'
 import { SectionIcon } from '../sectionIcons'
+import { useGameTranslations } from '../../../localization/game'
+import { useUiText } from '../../../localization/uiText'
 
 function SocketSelectedPanel({
   state,
@@ -90,6 +92,8 @@ function SocketPickerTrigger({
   onChange: (id: string | null) => void
   dpsPreviewEnabled: boolean
 }) {
+  const { display } = useGameTranslations()
+  const ui = useUiText()
   const [open, setOpen] = useState(false)
   const multiplier = socketType === 'rainbow' ? RAINBOW_MULTIPLIER : 1
   const previousStats = useMemo<Record<string, number>>(() => {
@@ -195,7 +199,7 @@ function SocketPickerTrigger({
               : 'italic text-faint'
           }`}
         >
-          {current ? current.name : 'Empty socket'}
+          {current ? display(current.name) : ui('Empty socket')}
         </span>
         {current?.tier !== undefined && (
           <span className="ml-1 rounded-xs border border-accent-deep/40 px-1 py-px font-mono text-[9px] tabular-nums text-accent-hot/75">
@@ -204,7 +208,7 @@ function SocketPickerTrigger({
         )}
       </span>
       <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-faint group-hover:text-accent-hot">
-        Browse →
+        {ui('Browse')} →
       </span>
     </button>
   )
@@ -248,6 +252,7 @@ function SocketTypeToggle({
   onChange: (t: SocketType) => void
   locked?: boolean
 }) {
+  const ui = useUiText()
   // Subtle rainbow: a 1px gradient ring around a dark core with a soft
   // gradient text fill, instead of a solid rainbow block.
   const rainbowRing =
@@ -257,7 +262,7 @@ function SocketTypeToggle({
   if (locked) {
     return (
       <span
-        title="Built-in rainbow socket: +50% effect"
+        title={ui('Built-in rainbow socket: +50% effect')}
         className={`shrink-0 rounded-xs ${rainbowRing}`}
       >
         <span className="flex h-[18px] w-[18px] items-center justify-center rounded-[3px] bg-bg/95 font-mono text-[10px] font-semibold">
@@ -270,7 +275,7 @@ function SocketTypeToggle({
     <button
       type="button"
       onClick={() => onChange('normal')}
-      title="Rainbow socket: +50% effect — click for Normal"
+      title={ui('Rainbow socket: +50% effect — click for Normal')}
       className={`shrink-0 rounded-xs ${rainbowRing}`}
     >
       <span className="flex h-[18px] w-[18px] items-center justify-center rounded-[3px] bg-bg/95 font-mono text-[10px] font-semibold">
@@ -281,7 +286,7 @@ function SocketTypeToggle({
     <button
       type="button"
       onClick={() => onChange('rainbow')}
-      title="Normal socket — click for Rainbow (+50% effect)"
+      title={ui('Normal socket — click for Rainbow (+50% effect)')}
       className="flex h-5 w-5 shrink-0 items-center justify-center rounded-xs border border-accent-deep/30 bg-bg/60 font-mono text-[10px] font-semibold text-faint transition-colors hover:border-accent-hot hover:text-muted"
     >
       N
@@ -310,6 +315,8 @@ export function SocketsSection({
   onSocketType: (idx: number, type: SocketType) => void
   dpsPreviewEnabled?: boolean
 }) {
+  const { display } = useGameTranslations()
+  const ui = useUiText()
   if (maxSockets === 0) return null
   const filledNames = equipped.socketed
     .filter((s): s is string => !!s)
@@ -331,14 +338,14 @@ export function SocketsSection({
         <>
           {socketedSummary && (
             <span className="mr-1 max-w-[220px] truncate font-mono text-[10px] uppercase tracking-[0.08em] text-faint">
-              {socketedSummary}
+              {display(socketedSummary)}
             </span>
           )}
           <button
             onClick={() => onSocketCount(equipped.socketCount - 1)}
             disabled={equipped.socketCount === 0}
             className="flex h-5 w-5 items-center justify-center rounded-xs border border-accent-deep/40 bg-bg/60 font-mono text-[12px] leading-none text-muted transition-colors hover:border-accent-hot hover:text-accent-hot disabled:cursor-not-allowed disabled:opacity-30"
-            aria-label="Decrease sockets"
+            aria-label={ui('Decrease sockets')}
           >
             −
           </button>
@@ -349,7 +356,7 @@ export function SocketsSection({
             onClick={() => onSocketCount(equipped.socketCount + 1)}
             disabled={equipped.socketCount >= maxSockets}
             className="flex h-5 w-5 items-center justify-center rounded-xs border border-accent-deep/40 bg-bg/60 font-mono text-[12px] leading-none text-muted transition-colors hover:border-accent-hot hover:text-accent-hot disabled:cursor-not-allowed disabled:opacity-30"
-            aria-label="Increase sockets"
+            aria-label={ui('Increase sockets')}
           >
             +
           </button>

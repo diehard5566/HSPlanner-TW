@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
+import { UiText } from '../../localization/LocalizedText'
 import { subskillTags } from '@data'
 import type { Skill, SubskillEffect, SubskillNode } from '../../types'
 import { formatValue, statName } from '../../utils/item/stats'
@@ -181,7 +182,7 @@ export default function SubskillTooltip({
       {tagChange && (
         <TooltipSection>
           <div className="flex flex-wrap items-center gap-1 font-mono text-[9px] uppercase tracking-[0.14em]">
-            <span className="mr-0.5 text-faint">Tags</span>
+            <span className="mr-0.5 text-faint"><UiText>Tags</UiText></span>
             {tagChange.add?.map((t) => (
               <span
                 key={t}
@@ -313,7 +314,7 @@ export default function SubskillTooltip({
       {netChangeVisible && (
         <TooltipSection>
           <div className="mb-2 flex items-center gap-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
-            <span>Net Change</span>
+            <span><UiText>Net Change</UiText></span>
             <span className="h-px flex-1 bg-border" />
             <span className="font-normal tracking-[0.14em] text-faint">
               +1 rank

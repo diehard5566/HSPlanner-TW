@@ -9,6 +9,7 @@ import {
   filterStatIdsFor,
 } from '../../utils/lootfilter/buildFilter'
 import { createFilter } from '../../utils/lootfilter/savedFilters'
+import { useGameTranslations } from '../../localization/game'
 
 interface GenerateFromBuildModalProps {
   buildId: string
@@ -25,6 +26,7 @@ export function GenerateFromBuildModal({
   onClose,
   onDone,
 }: GenerateFromBuildModalProps) {
+  const { display } = useGameTranslations()
   const stats = useMemo(() => collectBuildStats(inventory), [inventory])
   const statIds = useMemo(() => filterStatIdsFor(stats), [stats])
   const affixes = useMemo(
@@ -134,7 +136,7 @@ export function GenerateFromBuildModal({
                           : 'border-border-2 text-faint hover:text-muted'
                       }`}
                     >
-                      {a.name}
+                      {display(a.name)}
                     </button>
                   )
                 })}

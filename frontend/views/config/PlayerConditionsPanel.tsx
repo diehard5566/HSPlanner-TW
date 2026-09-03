@@ -1,8 +1,10 @@
 import { useBuild } from '../../store/build'
 import { CountBadge, Panel } from './configPrimitives'
 import { PLAYER_CONDITIONS } from './constants'
+import { useUiText } from '../../localization/uiText'
 
 export default function PlayerConditionsPanel() {
+  const ui = useUiText()
   const playerConditions = useBuild((s) => s.playerConditions)
   const setPlayerCondition = useBuild((s) => s.setPlayerCondition)
 
@@ -44,7 +46,7 @@ export default function PlayerConditionsPanel() {
                 }
               />
               <span className={checked ? 'text-accent-hot' : 'text-text'}>
-                {c.label}
+                {ui(c.label)}
               </span>
             </label>
           )
